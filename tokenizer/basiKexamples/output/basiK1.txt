@@ -1,0 +1,28 @@
+[T1, T2, T3, T4, T5]
+
+T1:
+    tType = "variable"; 
+    sPos = 0;
+    text = "A";
+
+T2:
+    tType = "assignment"; 
+    sPos = 2;
+    text = "=";
+
+T3:
+    tType = "number"; 
+    sPos = 4;
+    text = "3";
+
+T4:
+    tType = "operator"; 
+    sPos = 6;
+    text = "+";
+
+T5:
+    tType = "number"; 
+    sPos = 8;
+    text = "3";
+
+
