@@ -16,9 +16,20 @@ class Tokenizer {
 
 class Token {
     public:
-        string tType;
+        unordered_map<string, bool> tType = {
+            {"comparitor",false},
+            {"variable", false},
+            {"number", false},
+            {"for", false},
+            {"while", false},
+            {"if", false},
+            {"comment", false}
+        };
+
         int sPos;
         string text;
+
+
 };
 
 
@@ -26,15 +37,24 @@ int main()
 {   
 
     string line;
-    ifstream test(in_File_1);
+    ifstream test(inFile2);
     vector<string> rawLines;
+    vector<Token> tokens;
 
     while (getline (test, line)) {
         rawLines.push_back(line);
     }
 
+    vector<string> splitted;
     for (int i = 0; i < rawLines.size(); i++) {
+        boost::split(splitted, rawLines[i], boost:: is_any_of(" "));
         
+        for(int j = 0; j < splitted.size(); j++){
+            
+
+            
+        }
+
     }
 
 
