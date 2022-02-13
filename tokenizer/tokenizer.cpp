@@ -99,9 +99,44 @@ int main()
         boost::split(splitted, rawLines[i], boost:: is_any_of(" "));
         
         for(int j = 0; j < splitted.size(); j++){
-            //TODO
-        }
+            string text = splitted[j];
+            if(isNumber(text)){
+                //assign token value and add it to the tokens vector
+            }
+            else if(isVariable(text)){
+                //assign token value and add it to the tokens vector
+            }
 
+            //TODO comments should be entire lines, not tokens.  
+            //We should check whether each line is a comment, not each
+            //token
+            else if(isComment(text)){
+                //assign token value and add it to the tokens vector
+            }
+            else if(isComparitor(text)){
+                //assign token value and add it to the tokens vector
+            }
+            else if(isIf(text)){
+                //assign token value and add it to the tokens vector
+            }
+            else if(isWhile(text)){
+                //assign token value and add it to the tokens vector
+            }
+            else if(isFor(text)){
+                //assign token value and add it to the tokens vector
+            }
+            else{
+                /*
+                What was typed is not a token, should do further analysis
+                to decipher what the student typed in.  Might be cool to use a deep learning 
+                model to try to guess what the student is trying to write, and provide
+                an example written in BasiK.
+                */
+                cout << "not a token: error";
+                
+
+            }
+        }
     }
 
     test.close();
