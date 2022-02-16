@@ -5,12 +5,28 @@
 #include <ostream>
 #include <fstream>
 #include <vector>
-//#include <unordered_map>
+#include <unordered_map>
 #include <regex>
 using namespace std;
 
 const string inFile1 = "/Users/blakemcmurray/Workspaces/ecs-240-project/tokenizer/basiKexamples/input/basiK1.txt";
 const string inFile2 =  "/Users/blakemcmurray/Workspaces/ecs-240-project/tokenizer/basiKexamples/input/basiK2.txt";
+
+//reserved words to check while tokenizing
+class ReservedWords {     
+  public:           
+    ReservedWords() {     
+        unordered_map<string, bool> rWords;
+        rWords.insert(make_pair("for", false));
+        rWords.insert(make_pair("if",false));
+        rWords.insert(make_pair("from", false));
+        rWords.insert(make_pair("while", false));
+        rWords.insert(make_pair("do", false));
+        rWords.insert(make_pair("int", false));
+    };
+};
+
+
 
 //Object used for determining token names
 //we probably don't actuall need this, but just in case
