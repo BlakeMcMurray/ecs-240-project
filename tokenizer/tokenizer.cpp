@@ -29,7 +29,7 @@ bool isComparitor(string text){
 
 //not implemented
 bool isIf(string text){
-    bool b = false;
+    bool b = text == "if";
     return(b);
 };
 
@@ -55,6 +55,21 @@ bool isFor(string text){
 bool isBool(string text){
     bool b = (text == "true" || text == "false");
     return(b);
+};
+
+bool isFrom(string text){
+    bool b = (text == "from");
+    return(b);
+};
+
+bool isTo(string text){
+    bool b = (text == "to");
+    return(b);
+};
+
+//function to check if word is reserved
+bool isReserved(string text){
+    return(isBool(text) | isFor(text) | isWhile(text) | isIf(text) | isFrom(text) | isTo(text) );
 };
 
 //unsure if we need a tokenizer object, but it is here 
