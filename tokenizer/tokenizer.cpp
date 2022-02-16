@@ -12,10 +12,10 @@ bool isNumber(string text){
     return(std::regex_match(text, re));
 };
 
-//regex to match variables
+//std::regex to match variables
 //I think a simple way to make sure we don't use keywords, is
 //to check keywords before checking if its a variable'
-//Ideally the regex would perfectly map allowed variables to the output
+//Ideally the std::regex would perfectly map allowed variables to the output
 //true and any thing that is not an allowed variable would be mapped to false
 bool isVariable(string text){
     std::regex re("([a-z]|[A-Z]|_)+(\d|[a-z]|[A-Z]|_)*");
@@ -67,9 +67,19 @@ bool isTo(string text){
     return(b);
 };
 
+bool isOperator(string text){
+    bool b = (text == "+"|text == "-" | text == "/"| text == "*"| text == "**" | text == "log");
+    return(b);
+};
+
+bool isEqual(string text){
+    bool b = text == "=";
+    return(b);
+};
+
 //function to check if word is reserved
 bool isReserved(string text){
-    return(isBool(text) | isFor(text) | isWhile(text) | isIf(text) | isFrom(text) | isTo(text) );
+    return(isBool(text) | isFor(text) | isWhile(text) | isIf(text) | isFrom(text) | isTo(text));
 };
 
 //unsure if we need a tokenizer object, but it is here 
@@ -88,10 +98,7 @@ class Token {
         string tType;
         int sPos;
         string text;
-        
-
 };
-
 
 int main()
 {   
@@ -108,21 +115,31 @@ int main()
     vector<Token> tokens;
 
     //generates the lines
+
     while (getline (test, line)) {
+
+        //any lines that are just white space are not included
+
         rawLines.push_back(line);
+        cout << line << endl;
+
     }
 
     vector<string> splitted;
     for (int i = 0; i < rawLines.size(); i++) {
-
         //It will make it easier if comments can only be done
         //as individual lines
         if(isComment(rawLines[i])){
             Token t;
-            t.tType = "Comment";
+            t.tType = "comment";
             t.text = rawLines[i];
             continue;
         };
+
+        std::regex re("\S");
+        if(!std::regex_search(rawLines[i], re)){
+            continue;
+        }
 
         //splits a string into a vector of strings by space delimiter
         boost::split(splitted, rawLines[i], boost:: is_any_of(" "));
@@ -130,44 +147,69 @@ int main()
         for(int j = 0; j < splitted.size(); j++){
             Token t;
             string text = splitted[j];
-            if(isNumber(text)){
+            if(isBool(text)){
                 //assign token value and add it to the tokens vector
-                t.tType = "number";
-                t.text = rawLines[i];
+                t.tType = "bool";
+                t.text = text;
+                tokens.push_back(t);
             }
-            else if(isVariable(text)){
-                //assign token value and add it to the tokens vector
-                t.tType = "var";
-                t.text = rawLines[i];
-            }
-
-            else if(isBool(text)){
-                //assign token value and add it to the tokens vector
-                t.tType = "var";
-                t.text = rawLines[i];
-            }
-
-
             else if(isComparitor(text)){
                 //assign token value and add it to the tokens vector
                 t.tType = "comparitor";
-                t.text = rawLines[i];
+                t.text = text;
+                tokens.push_back(t);
             }
+            else if(isEqual(text)){
+                //assign token value and add it to the tokens vector
+                t.tType = "equal";
+                t.text = text;
+                tokens.push_back(t);
+            }
+
             else if(isIf(text)){
                 //assign token value and add it to the tokens vector
                 t.tType = "if";
-                t.text = rawLines[i];
+                t.text = text;
+                tokens.push_back(t);
+            }
+
+            else if(isOperator(text)){
+                //assign token value and add it to the tokens vector
+                t.tType = "operator";
+                t.text = text;
+                tokens.push_back(t);
             }
             else if(isWhile(text)){
                 //assign token value and add it to the tokens vector
                 t.tType = "while";
-                t.text = rawLines[i];
+                t.text = text;
+                tokens.push_back(t);
             }
             else if(isFor(text)){
                 //assign token value and add it to the tokens vector
                 t.tType = "for";
-                t.text = rawLines[i];
+                t.text = text;
+                tokens.push_back(t);
             }
+
+            else if(isOperator(text)){
+                //assign token value and add it to the tokens vector
+                t.tType = "operator";
+                t.text = text;
+                tokens.push_back(t);
+            }
+
+            else if(isNumber(text)){
+                t.tType = "number";
+                t.text = text;
+                tokens.push_back(t);
+            }
+            else if(isVariable(text)){
+                t.tType = "var";
+                t.text = text;
+                tokens.push_back(t);
+            }
+            
             else{
                 /*
                 What was typed is not a token, should do further analysis
@@ -176,10 +218,17 @@ int main()
                 an example written in BasiK.
                 */
                 cout << "not a token: error";
+                return(-1);
                 
 
             }
         }
+    }
+
+    cout << "in" << endl;
+    for(int i = 0; i < tokens.size(); i++){
+        cout << tokens[i].text << " is a " << tokens[i].tType << endl;
+
     }
 
     test.close();
