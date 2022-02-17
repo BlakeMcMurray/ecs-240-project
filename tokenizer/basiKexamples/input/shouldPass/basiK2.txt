@@ -2,4 +2,7 @@ A = 3 + 3
 bool = true
 C = A + A
 
+    d
+    dkw
+
     

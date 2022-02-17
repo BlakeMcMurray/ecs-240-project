@@ -6,100 +6,6 @@
 */
 #include "tokenizer.hpp"
 
-//input: text, output: true or false
-bool isNumber(string text){
-    std::regex re("(-?[1-9]\d*(\.\d+)?)|-0\.\d+|0(\.\d+)?");
-    return(std::regex_match(text, re));
-};
-
-//std::regex to match variables
-//I think a simple way to make sure we don't use keywords, is
-//to check keywords before checking if its a variable'
-//Ideally the std::regex would perfectly map allowed variables to the output
-//true and any thing that is not an allowed variable would be mapped to false
-bool isVariable(string text){
-    std::regex re("([a-z]|[A-Z]|_)+(\d|[a-z]|[A-Z]|_)*");
-    return(std::regex_match(text, re));
-};
-
-bool isComparitor(string text){
-    bool b = (text == "==") || (text == "!=") || (text == "<") || (text == ">") || (text == "<=") || (text == ">=");
-    return(b);
-};
-
-//not implemented
-bool isIf(string text){
-    bool b = text == "if";
-    return(b);
-};
-
-//this will apply to individual lines, not 
-//space delimited strings
-bool isComment(string text){
-    return(text[0] == '#');
-};
-
-//not implemented
-bool isWhile(string text){
-
-    bool b = text == "while";
-    return(b);
-
-};
-
-bool isFor(string text){
-    bool b = text == "for";
-    return(b);
-};
-
-bool isBool(string text){
-    bool b = (text == "true" || text == "false");
-    return(b);
-};
-
-bool isFrom(string text){
-    bool b = (text == "from");
-    return(b);
-};
-
-bool isTo(string text){
-    bool b = (text == "to");
-    return(b);
-};
-
-bool isOperator(string text){
-    bool b = (text == "+"|text == "-" | text == "/"| text == "*"| text == "**" | text == "log");
-    return(b);
-};
-
-bool isEqual(string text){
-    bool b = text == "=";
-    return(b);
-};
-
-//function to check if word is reserved
-bool isReserved(string text){
-    return(isBool(text) | isFor(text) | isWhile(text) | isIf(text) | isFrom(text) | isTo(text));
-};
-
-//unsure if we need a tokenizer object, but it is here 
-//just in case
-class Tokenizer {      
-    public:            
-        int myNum;        
-        string myString;  
-};
-
-//token object that holds the type of token,
-//the position in the original text and the 
-//raw text that the token consists of
-class Token {
-    public:
-        string tType;
-        int sPos;
-        string text;
-};
-
 int main()
 {   
 
@@ -116,12 +22,14 @@ int main()
 
     //generates the lines
 
+
     while (getline (test, line)) {
 
-        //any lines that are just white space are not included
-
-        rawLines.push_back(line);
-        cout << line << endl;
+        regex re(R"(\S)");
+        if(regex_search(line, re)){
+            trim(line);
+            rawLines.push_back(line);
+        }
 
     }
 
@@ -135,15 +43,10 @@ int main()
             t.text = rawLines[i];
             continue;
         };
-
-        std::regex re("\S");
-        if(!std::regex_search(rawLines[i], re)){
-            continue;
-        }
+        
 
         //splits a string into a vector of strings by space delimiter
         boost::split(splitted, rawLines[i], boost:: is_any_of(" "));
-        
         for(int j = 0; j < splitted.size(); j++){
             Token t;
             string text = splitted[j];
@@ -217,15 +120,16 @@ int main()
                 model to try to guess what the student is trying to write, and provide
                 an example written in BasiK.
                 */
-                cout << "not a token: error";
+                cout << "not a token: error" << endl;
+                cout << "The text is: " << text << endl;
                 return(-1);
                 
 
             }
+            
         }
     }
 
-    cout << "in" << endl;
     for(int i = 0; i < tokens.size(); i++){
         cout << tokens[i].text << " is a " << tokens[i].tType << endl;
 
