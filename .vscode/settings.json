@@ -74,7 +74,7 @@
     "variant": "cpp",
     "vector": "cpp"
   },
-  "C_Cpp_Runner.cppCompilerPath": "/usr/bin/g++",
+  "C_Cpp_Runner.cppCompilerPath": "/usr/bin/clang++",
   "C_Cpp_Runner.cStandard": "c11",
   "C_Cpp_Runner.cppStandard": "c++11",
   "C_Cpp_Runner.msvcBatchPath": "",
@@ -108,5 +108,7 @@
     "**/.*/**",
     "**/.vscode",
     "**/.vscode/**"
-  ]
+  ],
+  "C_Cpp_Runner.cCompilerPath": "/usr/bin/clang",
+  "C_Cpp_Runner.debuggerPath": "/usr/bin/lldb"
 }

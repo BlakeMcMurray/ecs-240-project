@@ -1,11 +1,11 @@
 /***************************************************************************
-* Copyright (c) 2019, Sylvain Corlay, Johan Mabille, Wolf Vollprecht       *
-* Copyright (c) 2019, QuantStack                                           *
-*                                                                          *
-* Distributed under the terms of the BSD 3-Clause License.                 *
-*                                                                          *
-* The full license is in the file LICENSE, distributed with this software. *
-****************************************************************************/
+ * Copyright (c) 2019, Sylvain Corlay, Johan Mabille, Wolf Vollprecht       *
+ * Copyright (c) 2019, QuantStack                                           *
+ *                                                                          *
+ * Distributed under the terms of the BSD 3-Clause License.                 *
+ *                                                                          *
+ * The full license is in the file LICENSE, distributed with this software. *
+ ****************************************************************************/
 
 #include <iostream>
 #include <vector>
@@ -23,7 +23,7 @@ namespace xeus_calc
     {
     }
 
-    std::string formating_expr(const std::string& expression)
+    std::string formating_expr(const std::string &expression)
     {
         std::string operators = "-+/*^()";
         std::string spaced_expression;
@@ -83,7 +83,7 @@ namespace xeus_calc
         return precedence_map;
     }
 
-    std::string parse_rpn(const std::string& formated_expression, publish_type publish)
+    std::string parse_rpn(const std::string &formated_expression, publish_type publish)
     {
         std::stringstream input(formated_expression);
         std::string token;
@@ -166,14 +166,15 @@ namespace xeus_calc
         operators_map["-"] = std::minus<double>();
         operators_map["*"] = std::multiplies<double>();
         operators_map["/"] = std::divides<double>();
-        operators_map["^"] = [](double first_argument, double second_argument) {
+        operators_map["^"] = [](double first_argument, double second_argument)
+        {
             return std::pow(first_argument, second_argument);
         };
 
         return operators_map;
     }
 
-    double compute_rpn(const std::string& rpn_expression, publish_type publish)
+    double compute_rpn(const std::string &rpn_expression, publish_type publish)
     {
         publish("stdout", "\nInput\tOperation\tStack after\n");
         std::istringstream input(rpn_expression);
@@ -223,7 +224,7 @@ namespace xeus_calc
     }
 
     nl::json interpreter::execute_request_impl(int execution_counter,
-                                               const std::string& code,
+                                               const std::string &code,
                                                bool /*silent*/,
                                                bool /*store_history*/,
                                                nl::json /*user_expressions*/,
@@ -241,7 +242,8 @@ namespace xeus_calc
 
         nl::json pub_data;
         std::string result = "Result = ";
-        auto publish = [this](const std::string& name, const std::string& text) {
+        auto publish = [this](const std::string &name, const std::string &text)
+        {
             this->publish_stream(name, text);
         };
         try
@@ -256,7 +258,7 @@ namespace xeus_calc
             jresult["user_expressions"] = nl::json::object();
             return jresult;
         }
-        catch (const std::runtime_error& err)
+        catch (const std::runtime_error &err)
         {
             nl::json jresult;
             publish_stream("stderr", err.what());
@@ -269,14 +271,14 @@ namespace xeus_calc
         // publish_execution_error("TypeError", "123", {"!@#$", "*(*"});
     }
 
-    nl::json interpreter::complete_request_impl(const std::string& /*code*/, int /*cursor_pos*/)
+    nl::json interpreter::complete_request_impl(const std::string & /*code*/, int /*cursor_pos*/)
     {
         nl::json jresult;
         jresult["status"] = "ok";
         return jresult;
     };
 
-    nl::json interpreter::inspect_request_impl(const std::string& /*code*/,
+    nl::json interpreter::inspect_request_impl(const std::string & /*code*/,
                                                int /*cursor_pos*/,
                                                int /*detail_level*/)
     {
@@ -285,7 +287,7 @@ namespace xeus_calc
         return jresult;
     };
 
-    nl::json interpreter::is_complete_request_impl(const std::string& /*code*/)
+    nl::json interpreter::is_complete_request_impl(const std::string & /*code*/)
     {
         nl::json jresult;
         jresult["status"] = "complete";
@@ -298,16 +300,16 @@ namespace xeus_calc
         result["implementation"] = "xcalc";
         result["implementation_version"] = "0.1.0";
         std::string banner = ""
-        " **     ** ******** **     **  ********         ******      **     **         ****** \n"
-        "//**   ** /**///// /**    /** **//////         **////**    ****   /**        **////** \n"
-        " //** **  /**      /**    /**/**              **    //    **//**  /**       **    // \n"
-        "  //***   /******* /**    /**/********* *****/**         **  //** /**      /**       \n"
-        "   **/**  /**////  /**    /**////////**///// /**        **********/**      /**       \n"
-        "  ** //** /**      /**    /**       /**      //**    **/**//////**/**      //**    ** \n"
-        " **   //**/********//*******  ********        //****** /**     /**/******** //****** \n"
-        "//     // ////////  ///////  ////////          //////  //      // ////////   ////// \n"
-        "\n"
-        " Implementation of a calculator based on RPN through Xeus";
+                             " **     ** ******** **     **  ********         ******      **     **         ****** \n"
+                             "//**   ** /**///// /**    /** **//////         **////**    ****   /**        **////** \n"
+                             " //** **  /**      /**    /**/**              **    //    **//**  /**       **    // \n"
+                             "  //***   /******* /**    /**/********* *****/**         **  //** /**      /**       \n"
+                             "   **/**  /**////  /**    /**////////**///// /**        **********/**      /**       \n"
+                             "  ** //** /**      /**    /**       /**      //**    **/**//////**/**      //**    ** \n"
+                             " **   //**/********//*******  ********        //****** /**     /**/******** //****** \n"
+                             "//     // ////////  ///////  ////////          //////  //      // ////////   ////// \n"
+                             "\n"
+                             " Implementation of a calculator based on RPN through Xeus";
         result["banner"] = banner;
         result["language_info"]["name"] = "calc";
         result["language_info"]["version"] = "";
