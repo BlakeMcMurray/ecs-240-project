@@ -15,6 +15,7 @@ using std::cout;
 using std::vector;
 using std::regex;
 using std::ifstream;
+using std::regex_match;
 using namespace boost::algorithm;
 
 
@@ -39,9 +40,8 @@ class ReservedWords {
 
 //input: text, output: true or false
 bool isNumber(string text){
-    cout << text << endl;
-    std::regex re(R"((-?[1-9]\d*(\.\d+)?)|-0\.\d+|0(\.\d+)?)");
-    return(std::regex_match(text, re));
+    regex re(R"((-?[1-9]\d*(\.\d+)?)|-0\.\d+|0(\.\d+)?)");
+    return(regex_match(text, re));
 };
 
 //std::regex to match variables
@@ -59,7 +59,6 @@ bool isComparitor(string text){
     return(b);
 };
 
-//not implemented
 bool isIf(string text){
     bool b = text == "if";
     return(b);
@@ -174,19 +173,19 @@ vector<Token> scanner(ifstream &test){
             string text = splitted[j];
             if(isBool(text)){
                 //assign token value and add it to the tokens vector
-                t.tType = "bool";
+                t.tType = "b";
                 t.text = text;
                 tokens.push_back(t);
             }
             else if(isComparitor(text)){
                 //assign token value and add it to the tokens vector
-                t.tType = "comparitor";
+                t.tType = "comp";
                 t.text = text;
                 tokens.push_back(t);
             }
             else if(isEqual(text)){
                 //assign token value and add it to the tokens vector
-                t.tType = "equal";
+                t.tType = "=";
                 t.text = text;
                 tokens.push_back(t);
             }
@@ -198,12 +197,6 @@ vector<Token> scanner(ifstream &test){
                 tokens.push_back(t);
             }
 
-            else if(isOperator(text)){
-                //assign token value and add it to the tokens vector
-                t.tType = "operator";
-                t.text = text;
-                tokens.push_back(t);
-            }
             else if(isWhile(text)){
                 //assign token value and add it to the tokens vector
                 t.tType = "while";
@@ -219,13 +212,13 @@ vector<Token> scanner(ifstream &test){
 
             else if(isOperator(text)){
                 //assign token value and add it to the tokens vector
-                t.tType = "operator";
+                t.tType = "op";
                 t.text = text;
                 tokens.push_back(t);
             }
 
             else if(isNumber(text)){
-                t.tType = "number";
+                t.tType = "n";
                 t.text = text;
                 tokens.push_back(t);
             }
@@ -248,9 +241,12 @@ vector<Token> scanner(ifstream &test){
                 
 
             }
-            
         }
+
     }
+    Token eof;
+    eof.tType = "EOF";
+    tokens.push_back(eof);
 
     for(int i = 0; i < tokens.size(); i++){
         cout << tokens[i].text << " is a " << tokens[i].tType << endl;
