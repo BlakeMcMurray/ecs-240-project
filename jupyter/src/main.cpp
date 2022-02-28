@@ -1,11 +1,11 @@
 /***************************************************************************
-* Copyright (c) 2019, Sylvain Corlay, Johan Mabille, Wolf Vollprecht       *
-* Copyright (c) 2019, QuantStack                                           *
-*                                                                          *
-* Distributed under the terms of the BSD 3-Clause License.                 *
-*                                                                          *
-* The full license is in the file LICENSE, distributed with this software. *
-****************************************************************************/
+ * Copyright (c) 2019, Sylvain Corlay, Johan Mabille, Wolf Vollprecht       *
+ * Copyright (c) 2019, QuantStack                                           *
+ *                                                                          *
+ * Distributed under the terms of the BSD 3-Clause License.                 *
+ *                                                                          *
+ * The full license is in the file LICENSE, distributed with this software. *
+ ****************************************************************************/
 
 #include <memory>
 
@@ -14,9 +14,9 @@
 #include "xeus/xkernel_configuration.hpp"
 #include "xeus/xserver_zmq.hpp"
 
-#include "xeus-calc/xeus_calc_interpreter.hpp"
+#include "xeus-basik/xeus_basik_interpreter.hpp"
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     // Load configuration file
     std::string file_name = (argc == 1) ? "connection.json" : argv[2];
@@ -26,10 +26,10 @@ int main(int argc, char* argv[])
     using context_type = xeus::xcontext_impl<zmq::context_t>;
     using context_ptr = std::unique_ptr<context_type>;
     context_ptr context = context_ptr(new context_type());
-    
+
     // Create interpreter instance
-    using interpreter_ptr = std::unique_ptr<xeus_calc::interpreter>;
-    interpreter_ptr interpreter = std::make_unique<xeus_calc::interpreter>();
+    using interpreter_ptr = std::unique_ptr<xeus_basik::interpreter>;
+    interpreter_ptr interpreter = std::make_unique<xeus_basik::interpreter>();
 
     // Create kernel instance and start it
     xeus::xkernel kernel(config,

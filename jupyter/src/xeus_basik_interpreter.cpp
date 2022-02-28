@@ -15,9 +15,9 @@
 
 #include "xeus/xinterpreter.hpp"
 
-#include "xeus-calc/xeus_calc_interpreter.hpp"
+#include "xeus-basik/xeus_basik_interpreter.hpp"
 
-namespace xeus_calc
+namespace xeus_basik
 {
     void interpreter::configure_impl()
     {
@@ -297,7 +297,7 @@ namespace xeus_calc
     nl::json interpreter::kernel_info_request_impl()
     {
         nl::json result;
-        result["implementation"] = "xcalc";
+        result["implementation"] = "BasiK";
         result["implementation_version"] = "0.1.0";
         std::string banner = ""
                              " **     ** ******** **     **  ********         ******      **     **         ****** \n"
@@ -311,7 +311,7 @@ namespace xeus_calc
                              "\n"
                              " Implementation of a calculator based on RPN through Xeus";
         result["banner"] = banner;
-        result["language_info"]["name"] = "calc";
+        result["language_info"]["name"] = "basik";
         result["language_info"]["version"] = "";
         result["language_info"]["mimetype"] = "";
         result["language_info"]["file_extension"] = "";

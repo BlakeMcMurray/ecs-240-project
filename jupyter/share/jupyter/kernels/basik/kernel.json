@@ -1,0 +1,9 @@
+{
+    "display_name": "BasiK",
+    "argv": [
+        "/Users/noahtarr/opt/anaconda3/envs/ecs240/bin/basik",
+        "-f",
+        "{connection_file}"
+    ],
+    "language": ""
+}

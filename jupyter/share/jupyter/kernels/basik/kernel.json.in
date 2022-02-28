@@ -1,0 +1,9 @@
+{
+    "display_name": "BasiK",
+    "argv": [
+        "@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_BINDIR@/basik",
+        "-f",
+        "{connection_file}"
+    ],
+    "language": ""
+}

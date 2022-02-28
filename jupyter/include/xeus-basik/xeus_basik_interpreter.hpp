@@ -7,18 +7,18 @@
  * The full license is in the file LICENSE, distributed with this software. *
  ****************************************************************************/
 
-#ifndef XEUS_CALC_INTERPRETER_HPP
-#define XEUS_CALC_INTERPRETER_HPP
+#ifndef XEUS_BASIK_INTERPRETER_HPP
+#define XEUS_BASIK_INTERPRETER_HPP
 
 #include "xeus/xinterpreter.hpp"
 
 #include "nlohmann/json.hpp"
 
-#include "xeus_calc_config.hpp"
+#include "xeus_basik_config.hpp"
 
 namespace nl = nlohmann;
 
-namespace xeus_calc
+namespace xeus_basik
 {
     class XEUS_BASIK_API interpreter : public xeus::xinterpreter
     {
