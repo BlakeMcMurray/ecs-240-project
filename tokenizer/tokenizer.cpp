@@ -9,6 +9,6 @@
 int main()
 {   
     ifstream inFile(inFile2);
-    vector<Token> tokens = scanner(inFile);
+    deque<Token> tokens = scanner(inFile);
     return(0);
 }

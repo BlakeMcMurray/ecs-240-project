@@ -4,7 +4,7 @@
 #include <string>
 #include <ostream>
 #include <fstream>
-#include <vector>
+#include <deque>
 #include <unordered_map>
 #include <regex>
 using std::string;
@@ -12,7 +12,7 @@ using std::unordered_map;
 using std::make_pair;
 using std::endl;
 using std::cout;
-using std::vector;
+using std::deque;
 using std::regex;
 using std::ifstream;
 using std::regex_match;
@@ -113,6 +113,14 @@ bool isReserved(string text){
     return(isBool(text) | isFor(text) | isWhile(text) | isIf(text) | isFrom(text) | isTo(text));
 };
 
+bool isLParen(string text){
+    return(text == "(");
+};
+
+bool isRParen(string text){
+    return(text == ")");
+};
+
 //unsure if we need a tokenizer object, but it is here 
 //just in case
 class Tokenizer {      
@@ -133,13 +141,13 @@ class Token {
 
 string line;
 
-vector<Token> scanner(ifstream &test){
+deque<Token> scanner(ifstream &test){
 
-    //vector to contain each raw line of text
-    vector<string> rawLines;
+    //deque to contain each raw line of text
+    deque<string> rawLines;
 
-    //vector of tokens to be returned or printed to a file
-    vector<Token> tokens;
+    //deque of tokens to be returned or printed to a file
+    deque<Token> tokens;
 
     //generates the lines
 
@@ -154,7 +162,7 @@ vector<Token> scanner(ifstream &test){
 
     }
 
-    vector<string> splitted;
+    deque<string> splitted;
     for (int i = 0; i < rawLines.size(); i++) {
         //It will make it easier if comments can only be done
         //as individual lines
@@ -166,52 +174,52 @@ vector<Token> scanner(ifstream &test){
         };
         
 
-        //splits a string into a vector of strings by space delimiter
+        //splits a string into a deque of strings by space delimiter
         boost::split(splitted, rawLines[i], boost:: is_any_of(" "));
         for(int j = 0; j < splitted.size(); j++){
             Token t;
             string text = splitted[j];
             if(isBool(text)){
-                //assign token value and add it to the tokens vector
+                //assign token value and add it to the tokens deque
                 t.tType = "b";
                 t.text = text;
                 tokens.push_back(t);
             }
             else if(isComparitor(text)){
-                //assign token value and add it to the tokens vector
+                //assign token value and add it to the tokens deque
                 t.tType = "comp";
                 t.text = text;
                 tokens.push_back(t);
             }
             else if(isEqual(text)){
-                //assign token value and add it to the tokens vector
+                //assign token value and add it to the tokens deque
                 t.tType = "=";
                 t.text = text;
                 tokens.push_back(t);
             }
 
             else if(isIf(text)){
-                //assign token value and add it to the tokens vector
+                //assign token value and add it to the tokens deque
                 t.tType = "if";
                 t.text = text;
                 tokens.push_back(t);
             }
 
             else if(isWhile(text)){
-                //assign token value and add it to the tokens vector
+                //assign token value and add it to the tokens deque
                 t.tType = "while";
                 t.text = text;
                 tokens.push_back(t);
             }
             else if(isFor(text)){
-                //assign token value and add it to the tokens vector
+                //assign token value and add it to the tokens deque
                 t.tType = "for";
                 t.text = text;
                 tokens.push_back(t);
             }
 
             else if(isOperator(text)){
-                //assign token value and add it to the tokens vector
+                //assign token value and add it to the tokens deque
                 t.tType = "op";
                 t.text = text;
                 tokens.push_back(t);
@@ -226,6 +234,14 @@ vector<Token> scanner(ifstream &test){
                 t.tType = "var";
                 t.text = text;
                 tokens.push_back(t);
+            }
+
+            else if(isLParen(text)){
+
+            }
+
+            else if (isRParen(text)){
+
             }
             
             else{
