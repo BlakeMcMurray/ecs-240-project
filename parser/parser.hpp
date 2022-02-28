@@ -30,29 +30,16 @@ string peek(deque<Token> tokens, int index){
 
 };
 
-AstNode* expression(deque<Token> tokens){
+//returns pointer to the root of the subtree of expression
+//as well as all the amount of tokens removed from the
+//front of the token deque
+pair<AstNode*, deque<Token>> expression(deque<Token> tokens){
 
-/*
 
-    if(tokens.front().tType == "var" && tokens.at(1).tType == "comparitor"){
-        tokens.pop_front();
-        tokens.pop_front();
-        return(expression(tokens));
-    }
 
-    else if (tokens.front().tType == "bool"){
-        tokens.pop_front();
-        
-        return(true);
-    }
 
-    else if ()
-    {
-        
-    }
-    
-*/  
-    return;
+
+
     
 };
 
@@ -68,16 +55,18 @@ AstNode* whileLoop(deque<Token> tokens){
         tokens.pop_front();
         tokens.pop_front();
         
-        //I may need to return a pair instead of just the node
-        //the reason is that I need to know how many tokens to remove
-        //from the beginning of the list.
-        
-        AstNode* n= expression(tokens);
-        if(n && tokens.front().text == ")"){
+        pair<AstNode*, deque<Token>> n = expression(tokens);
+
+        if(n.first && n.second[0].tType == ")"){
+            //push back terminals while and (
+            //w->children.push_back()
+            //w->children.push_back()
+            tokens = n.second;
             tokens.pop_front();
-            if(tokens.front().text == "do"){
+            if(tokens.front().tType == "do"){
                 tokens.pop_front();
-                n = command(tokens, p);
+                
+                
             }
             
         }

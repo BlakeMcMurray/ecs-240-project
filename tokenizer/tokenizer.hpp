@@ -136,6 +136,7 @@ class Token {
     public:
         string tType;
         int sPos;
+        int tPos;
         string text;
 };
 
@@ -170,6 +171,8 @@ deque<Token> scanner(ifstream &test){
             Token t;
             t.tType = "comment";
             t.text = rawLines[i];
+            t.tPos = tokens.size() + 1;
+            tokens.push_back(t);
             continue;
         };
         
@@ -183,18 +186,21 @@ deque<Token> scanner(ifstream &test){
                 //assign token value and add it to the tokens deque
                 t.tType = "b";
                 t.text = text;
+                t.tPos = tokens.size() + 1;
                 tokens.push_back(t);
             }
             else if(isComparitor(text)){
                 //assign token value and add it to the tokens deque
                 t.tType = "comp";
                 t.text = text;
+                t.tPos = tokens.size() + 1;
                 tokens.push_back(t);
             }
             else if(isEqual(text)){
                 //assign token value and add it to the tokens deque
                 t.tType = "=";
                 t.text = text;
+                t.tPos = tokens.size() + 1;
                 tokens.push_back(t);
             }
 
@@ -202,6 +208,7 @@ deque<Token> scanner(ifstream &test){
                 //assign token value and add it to the tokens deque
                 t.tType = "if";
                 t.text = text;
+                t.tPos = tokens.size() + 1;
                 tokens.push_back(t);
             }
 
@@ -209,12 +216,14 @@ deque<Token> scanner(ifstream &test){
                 //assign token value and add it to the tokens deque
                 t.tType = "while";
                 t.text = text;
+                t.tPos = tokens.size() + 1;
                 tokens.push_back(t);
             }
             else if(isFor(text)){
                 //assign token value and add it to the tokens deque
                 t.tType = "for";
                 t.text = text;
+                t.tPos = tokens.size() + 1;
                 tokens.push_back(t);
             }
 
@@ -222,26 +231,35 @@ deque<Token> scanner(ifstream &test){
                 //assign token value and add it to the tokens deque
                 t.tType = "op";
                 t.text = text;
+                t.tPos = tokens.size() + 1;
                 tokens.push_back(t);
             }
 
             else if(isNumber(text)){
                 t.tType = "n";
                 t.text = text;
+                t.tPos = tokens.size() + 1;
                 tokens.push_back(t);
             }
             else if(isVariable(text)){
                 t.tType = "var";
                 t.text = text;
+                t.tPos = tokens.size() + 1;
                 tokens.push_back(t);
             }
 
             else if(isLParen(text)){
-
+                t.tType = "(";
+                t.text = text;
+                t.tPos = tokens.size() + 1;
+                tokens.push_back(t);
             }
 
             else if (isRParen(text)){
-
+                t.tType = ")";
+                t.text = text;
+                t.tPos = tokens.size() + 1;
+                tokens.push_back(t);
             }
             
             else{
@@ -258,10 +276,11 @@ deque<Token> scanner(ifstream &test){
 
             }
         }
-
     }
+    
     Token eof;
     eof.tType = "EOF";
+    eof.tPos = tokens.size() + 1;
     tokens.push_back(eof);
 
     for(int i = 0; i < tokens.size(); i++){
