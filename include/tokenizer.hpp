@@ -1,21 +1,14 @@
-/*
- * File: tokenizer.cpp
- * Author: Blake McMurray
- * Created on 2/9/22
- * Description: This program takes raw text and converts to tokens
- */
 #ifndef TOKENIZER_HPP
 #define TOKENIZER_HPP
 
 #include <string>
-#include "boost/algorithm/string.hpp"
 #include <iostream>
 #include <string>
-#include <ostream>
 #include <fstream>
 #include <deque>
 #include <unordered_map>
 #include <regex>
+#include "boost/algorithm/string.hpp"
 using std::cout;
 using std::deque;
 using std::endl;
