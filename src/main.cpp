@@ -1,4 +1,4 @@
-#include "parser.hpp"
+// #include "parser.hpp"
 #include "tokenizer.hpp"
 
 const string inFile1 = "/Users/noahtarr/School_Offline/ECS240/ecs-240-project/basiKexamples/input/shouldPass/basiK1.txt";

@@ -1,7 +1,7 @@
 #ifndef ASTNODE_HPP
 #define ASTNODE_HPP
 
-#include "/Users/noahtarr/School Offline/ECS240/ecs-240-project/tokenizer/tokenizer.hpp"
+#include "tokenizer.hpp"
 using namespace std;
 
 /*
