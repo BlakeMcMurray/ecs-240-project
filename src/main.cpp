@@ -6,7 +6,6 @@ const string inFile2 = "/Users/noahtarr/School_Offline/ECS240/ecs-240-project/ba
 
 int main()
 {
-
     ifstream inFile(inFile2);
     BasiK::Scanner scnr(inFile);
     deque<BasiK::Token> tokens = *scnr.getTokens();

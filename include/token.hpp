@@ -5,25 +5,6 @@
 
 namespace BasiK
 {
-    // enum Operator
-    // {
-    //     add = '+',
-    //     sub = '-',
-    //     times = '*',
-    //     divide = '/'
-    // };
-
-    // enum Comparator
-    // {
-    //     equal = '==',
-    //     lt = '<',
-    //     leq = '<=',
-    //     gt = '>',
-    //     geq = '>=',
-    //     AND = 'and',
-    //     OR = 'or'
-    // };
-
     enum TokenType
     {
         whileLoop,
