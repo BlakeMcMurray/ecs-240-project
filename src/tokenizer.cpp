@@ -52,6 +52,7 @@ deque<string> Scanner::toRawLines(ifstream &ifile)
         if (regex_search(line, re))
         {
             // trim(line);
+            // TODO: There is definitely a better way to do this, but doing this for sake of time.
             boost::replace_all(line, "\t", "    ");
             rawLines.push_back(line);
         }
@@ -61,45 +62,25 @@ deque<string> Scanner::toRawLines(ifstream &ifile)
     return rawLines;
 }
 
-bool Scanner::isWhile(string expressionTerm)
-{
-    return (expressionTerm == "while");
-}
-
-bool Scanner::verifyWhile(string command)
+bool Scanner::isWhile(string command)
 {
     regex re(R"(^(while)\s+([a-zA-Z_]\w*){1}\s+((do){1}\s*)$)");
     return regex_search(command, re);
 }
 
-bool Scanner::isFor(string expressionTerm)
-{
-    return (expressionTerm == "for");
-}
-
-bool Scanner::verifyFor(string command)
+bool Scanner::isFor(string command)
 {
     regex re(R"(^(for)\s+([a-zA-Z]\w*){1}\s+(from)\s+\d+\s+(to)\s+\d+\s+((do){1}\s*)$)");
     return regex_search(command, re);
 }
 
-bool Scanner::isIf(string expressionTerm)
-{
-    return (expressionTerm == "if");
-}
-
-bool Scanner::verifyIf(string command)
+bool Scanner::isIf(string command)
 {
     regex re(R"(^(if)\s+([a-zA-Z_]\w*){1}\s+((do){1}\s*)$)");
     return regex_search(command, re);
 }
 
-bool Scanner::isAssignment(string expressionTerm)
-{
-    return (expressionTerm == "let");
-}
-
-bool Scanner::verifyAssignment(string command)
+bool Scanner::isAssignment(string command)
 {
     regex re(R"(^(let)\s+([a-zA-Z_]\w*){1}(\s)+={1}\s+([a-zA-Z_]\w*\s*$|-?(\d+\s*)$|(\S)+\s*)+)");
     return regex_search(command, re);
@@ -110,12 +91,6 @@ bool Scanner::verifyAssignment(string command)
 bool Scanner::isComment(string text)
 {
     return (text[0] == '#');
-}
-
-void Scanner::insertEOF(int lineNum)
-{
-    Token eof = Token(TokenType::eof, lineNum);
-    tokens->push_back(eof);
 }
 
 int Scanner::countTabs(string text)
@@ -136,42 +111,33 @@ void Scanner::tokenize(deque<string> rawLines)
     deque<string> splitted;
     for (size_t i = 0; i < rawLines.size(); i++)
     {
-        // splits a string into a vector of strings by space delimiter
         Token t;
         int tabInd = countTabs(rawLines[i]);
-        boost::split(splitted, rawLines[i], boost::is_any_of(" "));
-        string expressionTerm = splitted[4 * tabInd];
         boost::trim(rawLines[i]);
         string text = rawLines[i];
 
         if (isComment(rawLines[i]))
-        {
             t = Token(TokenType::comment, i + 1, rawLines[i]);
-        }
-        else if (isWhile(expressionTerm) && verifyWhile(text))
-        {
+        else if (isWhile(text))
             t = Token(TokenType::whileLoop, i + 1, rawLines[i], tabInd);
-        }
-        else if (isFor(expressionTerm) && verifyFor(text))
-        {
+        else if (isFor(text))
             t = Token(TokenType::forLoop, i + 1, rawLines[i], tabInd);
-        }
-        else if (isIf(expressionTerm) && verifyIf(text))
-        {
+        else if (isIf(text))
             t = Token(TokenType::ifStatement, i + 1, rawLines[i], tabInd);
-        }
-        else if (isAssignment(expressionTerm) && verifyAssignment(text))
-        {
+        else if (isAssignment(text))
             t = Token(TokenType::assignment, i + 1, rawLines[i], tabInd);
-        }
         else
         {
             t = Token(TokenType::error, i + 1, rawLines[i], tabInd);
-            cout << "Error: not a token" << endl;
-            cout << "The text is: " << text << endl;
+            cout << "Error line {" << i + 1 << "} in statement: \"" << text << "\"" << endl;
             // exit(1);
         }
         this->tokens->push_back(t);
     }
-    insertEOF(rawLines.size() + 1);
+}
+
+void Scanner::insertEOF(int lineNum)
+{
+    Token eof = Token(TokenType::eof, lineNum);
+    tokens->push_back(eof);
 }
