@@ -6,6 +6,7 @@
 
 namespace BasiK
 {
+    // Expression Base Class
     class Expression
     {
     protected:
@@ -17,9 +18,11 @@ namespace BasiK
         ~Expression() = default;
 
         virtual void evaluate() = 0;
-        static std::string get_expression_type(std::string text);
+        virtual void reevaluate(std::string) = 0;
+        static std::string parse_expression_type(std::string);
     };
 
+    // Arithmetic Expression
     class AExp : public Expression
     {
     private:
@@ -27,14 +30,17 @@ namespace BasiK
         static const std::unordered_set<std::string> operators;
 
     public:
-        explicit AExp(std::string text)
+        AExp(std::string text)
             : Expression(text) {}
         ~AExp() = default;
 
         void evaluate();
+        void reevaluate(std::string);
+        static std::string parse_arithmetic_exp(std::string);
     };
     const std::unordered_set<std::string> AExp::operators = {"+", "-", "*", "/"};
 
+    // Arithmetic Expression
     class BExp : public Expression
     {
     private:
@@ -43,11 +49,13 @@ namespace BasiK
         static const std::unordered_set<std::string> binaryComparators;
 
     public:
-        explicit BExp(std::string text)
+        BExp(std::string text)
             : Expression(text) {}
         ~BExp() = default;
 
         void evaluate();
+        void reevaluate(std::string);
+        static std::string parse_bool_exp(std::string);
     };
     const std::unordered_set<std::string> BExp::logicalComparators = {"and", "or", "not"};
     const std::unordered_set<std::string> BExp::binaryComparators = {"==", "!=", "<", "<=", ">", ">="};
