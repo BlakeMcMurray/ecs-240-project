@@ -49,7 +49,7 @@ namespace BasiK
         ~Scanner() = default;
 
         deque<Token> *getTokens() { return this->tokens; }
-        void printToken(Token);
+        static std::string getTokenStr(Token);
         void printTokens();
     };
 }

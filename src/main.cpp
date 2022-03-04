@@ -1,5 +1,6 @@
-// #include "parser.hpp"
 #include "tokenizer.hpp"
+#include "program.hpp"
+#include <map>
 
 const string inFile1 = "/Users/noahtarr/School_Offline/ECS240/ecs-240-project/basiKexamples/input/shouldPass/basiK1.txt";
 const string inFile2 = "/Users/noahtarr/School_Offline/ECS240/ecs-240-project/basiKexamples/input/shouldPass/basiK2.txt";
@@ -11,9 +12,7 @@ int main()
     deque<BasiK::Token> tokens = *scnr.getTokens();
     scnr.printTokens();
 
-    // BasiK::Parser parser(tokens);
+    BasiK::Program prgm(tokens);
 
-    // Then we need to interpret the generated tree
-    // parser.interpret();
-    return (1);
+    return 0;
 }

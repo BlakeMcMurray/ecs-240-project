@@ -1,34 +1,43 @@
+#include <iostream>
 #include "tokenizer.hpp"
 using namespace boost::algorithm;
 using namespace BasiK;
 
-void Scanner::printToken(Token token)
+std::string Scanner::getTokenStr(Token token)
 {
+    std::string formattedToken;
     switch (token.tType)
     {
     case TokenType::whileLoop:
-        cout << "whileLoop";
+        formattedToken = "whileLoop";
         break;
     case TokenType::forLoop:
-        cout << "forLoop\t";
+        formattedToken = "forLoop\t";
         break;
     case TokenType::ifStatement:
-        cout << "ifStatement";
+        formattedToken = "ifStatement";
         break;
     case TokenType::assignment:
-        cout << "assignment";
+        formattedToken = "assignment";
         break;
     case TokenType::comment:
-        cout << "comment";
+        formattedToken = "comment";
         break;
     case TokenType::eof:
-        cout << "eof\t";
+        formattedToken = "eof\t";
         break;
     default:
-        cout << "error\t";
+        formattedToken = "error\t";
     }
 
-    cout << "\t\t|" << token.lineNum << "\t\t|" << token.tabInd << "\t\t|" << token.text << endl;
+    formattedToken += "\t\t|";
+    formattedToken += token.lineNum;
+    formattedToken += "\t\t|";
+    formattedToken += token.tabInd;
+    formattedToken += "\t\t|";
+    formattedToken += token.text;
+    formattedToken += "\n";
+    return formattedToken;
 }
 
 void Scanner::printTokens()
@@ -36,7 +45,7 @@ void Scanner::printTokens()
     cout << "TokenType\t\t|LineNum\t|TabInd\t\t|Text" << endl;
     cout << "-------------------------------------------------------------------------\n";
     for (size_t i = 0; i < this->tokens->size(); i++)
-        printToken(this->tokens->at(i));
+        cout << getTokenStr(this->tokens->at(i));
 }
 
 deque<string> Scanner::toRawLines(ifstream &ifile)
@@ -129,8 +138,8 @@ void Scanner::tokenize(deque<string> rawLines)
         else
         {
             t = Token(TokenType::error, i + 1, rawLines[i], tabInd);
-            cout << "Error line {" << i + 1 << "} in statement: \"" << text << "\"" << endl;
-            // exit(1);
+            std::cerr << "Error line {" << i + 1 << "} in statement: \"" << text << "\"" << endl;
+            exit(1);
         }
         this->tokens->push_back(t);
     }
