@@ -1,42 +1,41 @@
 #include "expression.hpp"
 
 // Return a string representing the types of expression. Either "AExp" or "BExp".
-std::string BasiK::Expression::parse_expression_type(std::string text)
+char BasiK::Expression::parse_expression_type(std::string exp_text)
 {
-    return text;
+    for (auto op : BasiK::AExp::operators)
+        if (exp_text.find(op))
+            return 'A';
+    return 'B';
 }
 
 // Arithmetic Expression
 const std::unordered_set<std::string> BasiK::AExp::operators = {"+", "-", "*", "/"};
 
-// Evaluate the  value of the arithmetic expression represented by the text passed to constructor.
-void BasiK::AExp::evaluate()
+bool BasiK::AExp::verify(std::string)
 {
+    // TODO
+    return true;
 }
 
-void BasiK::AExp::reevaluate(std::string)
+int BasiK::AExp::evaluate(std::string exp, std::map<std::string, std::string> *vars)
 {
-}
-
-std::string BasiK::AExp::parse_arithmetic_exp(std::string text)
-{
-    return text;
+    // TODO
+    return 1;
 }
 
 // Boolean Expression
 const std::unordered_set<std::string> BasiK::BExp::logicalComparators = {"and", "or", "not"};
 const std::unordered_set<std::string> BasiK::BExp::binaryComparators = {"==", "!=", "<", "<=", ">", ">="};
 
-// Evaluate the value of the boolean expression represented by the text passed to constructor.
-void BasiK::BExp::evaluate()
+bool BasiK::BExp::verify(std::string)
 {
+    // TODO
+    return true;
 }
 
-void BasiK::BExp::reevaluate(std::string)
+bool BasiK::BExp::evaluate(std::string exp, std::map<std::string, std::string> *vars)
 {
-}
-
-std::string BasiK::BExp::parse_bool_exp(std::string text)
-{
-    return text;
+    // TODO
+    return true;
 }

@@ -4,8 +4,9 @@
 #include <map>
 #include <deque>
 #include <string>
+#include "token.hpp"
 #include "command.hpp"
-#include "tokenizer.hpp"
+#include "scanner.hpp"
 
 namespace BasiK
 {
@@ -14,17 +15,21 @@ namespace BasiK
     private:
         std::map<std::string, std::string> scope_vars;
         std::deque<std::string> output;
-        void evaluate_tokens(std::deque<Token>);
-        std::unique_ptr<std::deque<BasiK::Command>> get_nested(std::deque<Token>, int);
+        std::unique_ptr<std::deque<BasiK::Token>> evaluate_tokens(std::deque<Token>, int);
+        void skip_nested(std::deque<Token> &, int);
 
     public:
         Program(std::deque<Token> tokens)
-            evaluate_tokens(tokens);
+        {
+            evaluate_tokens(tokens, 0);
+        }
         ~Program() = default;
-        void execute_commands();
-        std::string output_to_str();
-        void output_to_file(std::string);
+        // void execute_commands();
+        // std::string output_to_str();
+        // void output_to_file(std::string);
+        // void pretty_print_commands(std::unique_ptr<std::deque<BasiK::Command>> &);
 
+        // Error handling
         void tab_index_error(BasiK::Token, int);
     };
 }

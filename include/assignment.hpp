@@ -13,41 +13,45 @@ namespace BasiK
     {
     protected:
         std::string var_name;
-        std::string parse_var_name(std::string);
+        std::string exp_raw;
 
     public:
-        explicit Assignment(std::string command_text, std::map<std::string, std::string> &parent_scope_vars)
+        explicit Assignment(std::string command_text,
+                            std::map<std::string, std::string> &parent_scope_vars)
             : Command(parent_scope_vars),
-              var_name(parse_var_name(command_text)) {}
+              var_name(parse_var_name(command_text)),
+              exp_raw(parse_exp(command_text)) {}
         ~Assignment() = default;
-        virtual void execute(std::deque<std::string> &) = 0;
+        virtual void execute() = 0;
+
         static std::string parse_exp(std::string);
+        static std::string parse_var_name(std::string);
     };
 
     class AAssignment : public Assignment
     {
-    private:
-        AExp exp;
-
     public:
-        explicit AAssignment(std::string command_text, std::map<std::string, std::string> &parent_scope_vars)
-            : Assignment(command_text, parent_scope_vars),
-              exp(parse_exp(command_text)) {}
+        explicit AAssignment(std::string command_text,
+                             std::map<std::string, std::string> &parent_scope_vars)
+            : Assignment(command_text, parent_scope_vars)
+        {
+            execute();
+        }
         ~AAssignment() = default;
-        void execute(std::deque<std::string> &);
+        void execute();
     };
 
     class BAssignment : public Assignment
     {
-    private:
-        BExp exp;
-
     public:
-        explicit BAssignment(std::string command_text, std::map<std::string, std::string> &parent_scope_vars)
-            : Assignment(command_text, parent_scope_vars),
-              exp(parse_exp(command_text)) {}
+        explicit BAssignment(std::string command_text,
+                             std::map<std::string, std::string> &parent_scope_vars)
+            : Assignment(command_text, parent_scope_vars)
+        {
+            execute();
+        }
         ~BAssignment() = default;
-        void execute(std::deque<std::string> &);
+        void execute();
     };
 } // namespace BasiK
 

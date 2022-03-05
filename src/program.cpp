@@ -3,71 +3,92 @@
 #include "complexCommand.hpp"
 #include "assignment.hpp"
 
-void BasiK::Program::evaluate_tokens(std::deque<Token> tokens)
-{
-    get_nested(tokens, 0);
-}
-
-std::unique_ptr<std::deque<BasiK::Command>> BasiK::Program::get_nested(std::deque<Token> tokens, int crnt_tab_index)
+std::unique_ptr<std::deque<BasiK::Token>> BasiK::Program::evaluate_tokens(std::deque<Token> tokens, int active_tab_index)
 {
     if (tokens.front().tType == BasiK::TokenType::eof)
         return nullptr;
 
-    auto commands = std::unique_ptr<std::deque<BasiK::Command>>(new std::deque<BasiK::Command>());
-    std::unique_ptr<std::deque<BasiK::Command>> nested_cmds = nullptr;
+    auto crnt_tokens = std::unique_ptr<std::deque<BasiK::Token>>(new std::deque<BasiK::Token>());
+    std::unique_ptr<std::deque<BasiK::Token>> nested_tokens = nullptr;
+    bool neverTrue = true;
     while (!tokens.empty())
     {
+        if (tokens.front().tabInd < active_tab_index)
+            return crnt_tokens;
+
         BasiK::Token t = tokens.front();
         tokens.pop_front();
+        crnt_tokens->push_back(t);
 
-        if (t.tabInd != crnt_tab_index && commands->empty())
-            tab_index_error(t, crnt_tab_index);
-        else if (t.tabInd < crnt_tab_index)
-            return commands;
+        if (t.tabInd != active_tab_index && crnt_tokens->empty())
+            tab_index_error(t, active_tab_index);
 
         switch (t.tType)
         {
         case TokenType::whileLoop:
         {
-            nested_cmds = get_nested(tokens, crnt_tab_index + 1);
-            While whileCmd(t.text, nested_cmds, this->scope_vars);
-            commands->push_back(whileCmd);
+            BasiK::While whileCmd(t.text, this->scope_vars);
+            if (whileCmd.exp_is_true())
+            {
+                neverTrue = false;
+                nested_tokens = evaluate_tokens(tokens, active_tab_index + 1);
+                whileCmd.attach_nested_tokens(nested_tokens);
+                while (whileCmd.exp_is_true())
+                {
+                    auto copy_nested_tokens = whileCmd.copy_nested_tokens();
+                    evaluate_tokens(copy_nested_tokens, active_tab_index + 1);
+                }
+            }
+            if (neverTrue)
+                skip_nested(tokens, active_tab_index);
             break;
         }
         case TokenType::forLoop:
         {
-            nested_cmds = get_nested(tokens, crnt_tab_index + 1);
-            For forCmd(t.text, nested_cmds, this->scope_vars);
-            commands->push_back(forCmd);
             break;
         }
         case TokenType::ifStatement:
         {
-            nested_cmds = get_nested(tokens, crnt_tab_index + 1);
-            If ifCmd(t.text, nested_cmds, this->scope_vars);
-            commands->push_back(ifCmd);
+            BasiK::If ifCmd(t.text, this->scope_vars);
+            if (ifCmd.exp_is_true())
+            {
+                neverTrue = false;
+                evaluate_tokens(tokens, active_tab_index + 1);
+                // ifCmd.attach_nested_tokens(nested_tokens);
+                // auto copy_nested_tokens = ifCmd.copy_nested_tokens();
+                // parse_nested(copy_nested_tokens, active_tab_index + 1);
+            }
+            if (neverTrue)
+                skip_nested(tokens, active_tab_index);
             break;
         }
         case TokenType::assignment:
         {
-            std::string assignmentType = Expression::parse_expression_type(Assignment::parse_exp(t.text));
-            if (assignmentType.compare("AExp"))
+            switch (Expression::parse_expression_type(Assignment::parse_exp(t.text)))
             {
-                AAssignment aAss(t.text, this->scope_vars);
-                commands->push_back(aAss);
-            }
-            else
+            case 'A':
             {
-                BAssignment bAss(t.text, this->scope_vars);
-                commands->push_back(bAss);
+                BasiK::AAssignment aAss(t.text, this->scope_vars);
+                break;
             }
-            break;
+            case 'B':
+                BasiK::BAssignment bAss(t.text, this->scope_vars);
+            }
         }
         }
     }
-    return commands;
+    return crnt_tokens;
 }
 
+void BasiK::Program::skip_nested(std::deque<Token> &tokens, int crnt_tab_index)
+{
+    while (tokens.front().tabInd > crnt_tab_index)
+    {
+        tokens.pop_front();
+    }
+}
+
+// Error handling
 void BasiK::Program::tab_index_error(BasiK::Token t, int last_tab_index)
 {
     std::cerr << "Error line {" << t.lineNum << "} in statement: \"" << t.text << "\"" << endl;

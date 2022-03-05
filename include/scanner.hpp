@@ -1,5 +1,5 @@
-#ifndef TOKENIZER_HPP
-#define TOKENIZER_HPP
+#ifndef SCANNER_HPP
+#define SCANNER_HPP
 
 #include <string>
 #include <iostream>
@@ -51,6 +51,7 @@ namespace BasiK
         deque<Token> *getTokens() { return this->tokens; }
         static std::string getTokenStr(Token);
         void printTokens();
+        static std::string remove_spaces(std::string);
     };
 }
 

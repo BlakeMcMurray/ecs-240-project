@@ -1,52 +1,7 @@
 #include <iostream>
-#include "tokenizer.hpp"
+#include "scanner.hpp"
 using namespace boost::algorithm;
 using namespace BasiK;
-
-std::string Scanner::getTokenStr(Token token)
-{
-    std::string formattedToken;
-    switch (token.tType)
-    {
-    case TokenType::whileLoop:
-        formattedToken = "whileLoop";
-        break;
-    case TokenType::forLoop:
-        formattedToken = "forLoop\t";
-        break;
-    case TokenType::ifStatement:
-        formattedToken = "ifStatement";
-        break;
-    case TokenType::assignment:
-        formattedToken = "assignment";
-        break;
-    case TokenType::comment:
-        formattedToken = "comment";
-        break;
-    case TokenType::eof:
-        formattedToken = "eof\t";
-        break;
-    default:
-        formattedToken = "error\t";
-    }
-
-    formattedToken += "\t\t|";
-    formattedToken += token.lineNum;
-    formattedToken += "\t\t|";
-    formattedToken += token.tabInd;
-    formattedToken += "\t\t|";
-    formattedToken += token.text;
-    formattedToken += "\n";
-    return formattedToken;
-}
-
-void Scanner::printTokens()
-{
-    cout << "TokenType\t\t|LineNum\t|TabInd\t\t|Text" << endl;
-    cout << "-------------------------------------------------------------------------\n";
-    for (size_t i = 0; i < this->tokens->size(); i++)
-        cout << getTokenStr(this->tokens->at(i));
-}
 
 deque<string> Scanner::toRawLines(ifstream &ifile)
 {
@@ -123,22 +78,22 @@ void Scanner::tokenize(deque<string> rawLines)
         Token t;
         int tabInd = countTabs(rawLines[i]);
         boost::trim(rawLines[i]);
-        string text = rawLines[i];
+        string formatted_text = remove_spaces(rawLines[i]);
 
         if (isComment(rawLines[i]))
-            t = Token(TokenType::comment, i + 1, rawLines[i]);
-        else if (isWhile(text))
-            t = Token(TokenType::whileLoop, i + 1, rawLines[i], tabInd);
-        else if (isFor(text))
-            t = Token(TokenType::forLoop, i + 1, rawLines[i], tabInd);
-        else if (isIf(text))
-            t = Token(TokenType::ifStatement, i + 1, rawLines[i], tabInd);
-        else if (isAssignment(text))
-            t = Token(TokenType::assignment, i + 1, rawLines[i], tabInd);
+            t = Token(TokenType::comment, i + 1, formatted_text);
+        else if (isWhile(rawLines[i]))
+            t = Token(TokenType::whileLoop, i + 1, formatted_text, tabInd);
+        else if (isFor(rawLines[i]))
+            t = Token(TokenType::forLoop, i + 1, formatted_text, tabInd);
+        else if (isIf(rawLines[i]))
+            t = Token(TokenType::ifStatement, i + 1, formatted_text, tabInd);
+        else if (isAssignment(rawLines[i]))
+            t = Token(TokenType::assignment, i + 1, formatted_text, tabInd);
         else
         {
-            t = Token(TokenType::error, i + 1, rawLines[i], tabInd);
-            std::cerr << "Error line {" << i + 1 << "} in statement: \"" << text << "\"" << endl;
+            t = Token(TokenType::error, i + 1, formatted_text, tabInd);
+            std::cerr << "Error line {" << i + 1 << "} in statement: \"" << rawLines[i] << "\"" << endl;
             exit(1);
         }
         this->tokens->push_back(t);
@@ -149,4 +104,55 @@ void Scanner::insertEOF(int lineNum)
 {
     Token eof = Token(TokenType::eof, lineNum);
     tokens->push_back(eof);
+}
+
+std::string Scanner::getTokenStr(Token token)
+{
+    std::string formattedToken;
+    switch (token.tType)
+    {
+    case TokenType::whileLoop:
+        formattedToken = "whileLoop";
+        break;
+    case TokenType::forLoop:
+        formattedToken = "forLoop\t";
+        break;
+    case TokenType::ifStatement:
+        formattedToken = "ifStatement";
+        break;
+    case TokenType::assignment:
+        formattedToken = "assignment";
+        break;
+    case TokenType::comment:
+        formattedToken = "comment";
+        break;
+    case TokenType::eof:
+        formattedToken = "eof\t";
+        break;
+    default:
+        formattedToken = "error\t";
+    }
+
+    formattedToken += "\t\t|";
+    formattedToken += token.lineNum;
+    formattedToken += "\t\t|";
+    formattedToken += token.tabInd;
+    formattedToken += "\t\t|";
+    formattedToken += token.text;
+    formattedToken += "\n";
+    return formattedToken;
+}
+
+void Scanner::printTokens()
+{
+    cout << "TokenType\t\t|LineNum\t|TabInd\t\t|Text" << endl;
+    cout << "-------------------------------------------------------------------------\n";
+    for (size_t i = 0; i < this->tokens->size(); i++)
+        cout << getTokenStr(this->tokens->at(i));
+}
+
+std::string Scanner::remove_spaces(std::string str)
+{
+    str.erase(std::remove(str.begin(), str.end(), ' '), str.end());
+    return str;
 }
