@@ -1,7 +1,7 @@
 let A = 3 + 3
-while False do
+while TRUE do
     let B = 5 + 1
     for ind from 0 to 10 do
         let C = C + i
-        if True do
+        if TRUE do
             let A = A + 1

@@ -81,18 +81,18 @@ void Scanner::scan(deque<string> rawLines)
         string formatted_text = remove_spaces(rawLines[i]);
 
         if (isComment(rawLines[i]))
-            t = Line(LINE_TYPE::COMMENT_LINE, i + 1, formatted_text);
+            t = Line(LINE_TYPE::COMMENT, i + 1, formatted_text);
         else if (isWhile(rawLines[i]))
-            t = Line(LINE_TYPE::WHILE_LINE, i + 1, formatted_text, tabInd);
+            t = Line(LINE_TYPE::WHILE, i + 1, formatted_text, tabInd);
         else if (isFor(rawLines[i]))
-            t = Line(LINE_TYPE::FOR_LINE, i + 1, formatted_text, tabInd);
+            t = Line(LINE_TYPE::FOR, i + 1, formatted_text, tabInd);
         else if (isIf(rawLines[i]))
-            t = Line(LINE_TYPE::IF_LINE, i + 1, formatted_text, tabInd);
+            t = Line(LINE_TYPE::IF, i + 1, formatted_text, tabInd);
         else if (isAssignment(rawLines[i]))
-            t = Line(LINE_TYPE::ASSIGNMENT_LINE, i + 1, formatted_text, tabInd);
+            t = Line(LINE_TYPE::ASSIGNMENT, i + 1, formatted_text, tabInd);
         else
         {
-            t = Line(LINE_TYPE::ERROR_LINE, i + 1, formatted_text, tabInd);
+            t = Line(LINE_TYPE::ERROR, i + 1, formatted_text, tabInd);
             std::cerr << "Error line {" << i + 1 << "} in statement: \"" << rawLines[i] << "\"" << endl;
             exit(1);
         }
@@ -102,31 +102,31 @@ void Scanner::scan(deque<string> rawLines)
 
 void Scanner::insertEOF(int lineNum)
 {
-    Line eof = Line(LINE_TYPE::EOF_LINE, lineNum);
+    Line eof = Line(LINE_TYPE::END_OF_FILE, lineNum);
     lines->push_back(eof);
 }
 
 std::string Scanner::get_formatted_line(Line line)
 {
     std::string formattedLine;
-    switch (line.L_Type)
+    switch (line.type)
     {
-    case LINE_TYPE::WHILE_LINE:
+    case LINE_TYPE::WHILE:
         formattedLine = "whileLoop";
         break;
-    case LINE_TYPE::FOR_LINE:
+    case LINE_TYPE::FOR:
         formattedLine = "forLoop\t";
         break;
-    case LINE_TYPE::IF_LINE:
+    case LINE_TYPE::IF:
         formattedLine = "ifStatement";
         break;
-    case LINE_TYPE::ASSIGNMENT_LINE:
+    case LINE_TYPE::ASSIGNMENT:
         formattedLine = "assignment";
         break;
-    case LINE_TYPE::COMMENT_LINE:
-        formattedLine = "comment";
+    case LINE_TYPE::COMMENT:
+        formattedLine = "comment\t";
         break;
-    case LINE_TYPE::EOF_LINE:
+    case LINE_TYPE::END_OF_FILE:
         formattedLine = "eof\t";
         break;
     default:

@@ -1,10 +1,18 @@
 #include "complexCommand.hpp"
 
+/**************************
+ * Complex Command Base
+ **************************/
+
 std::deque<BasiK::Line> BasiK::ComplexCommand::copy_nested_lines()
 {
     std::deque<BasiK::Line> nested_lines_copy(this->nested_lines->begin(), this->nested_lines->end());
     return nested_lines_copy;
 }
+
+/**************************
+ * While Command
+ **************************/
 
 std::string BasiK::While::parse_exp(std::string command_text)
 {
@@ -18,6 +26,10 @@ bool BasiK::While::exp_is_true()
 {
     return BasiK::BExp::evaluate(this->exp_raw, this->scope_vars);
 }
+
+/**************************
+ * For Command
+ **************************/
 
 std::string BasiK::For::parse_var_name(std::string command_text)
 {

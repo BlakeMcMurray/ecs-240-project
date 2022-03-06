@@ -1,6 +1,10 @@
 #include "assignment.hpp"
 #include <iostream>
 
+/**************************
+ * Assignment Base
+ **************************/
+
 std::string BasiK::Assignment::parse_exp(std::string command_text)
 {
     return command_text.substr(command_text.find_first_of('=') + 1);
@@ -14,12 +18,20 @@ std::string BasiK::Assignment::parse_var_name(std::string command_text)
     return match.str();
 }
 
+/**************************
+ * Arithmetic Assignment
+ **************************/
+
 void BasiK::AAssignment::execute()
 {
     this->scope_vars->insert(std::pair<std::string, std::string>(
         this->var_name,
         std::to_string(BasiK::AExp::evaluate(this->exp_raw, this->scope_vars))));
 }
+
+/**************************
+ * Boolean Assignment
+ **************************/
 
 void BasiK::BAssignment::execute()
 {
