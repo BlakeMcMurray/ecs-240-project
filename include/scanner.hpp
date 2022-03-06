@@ -8,7 +8,7 @@
 #include <deque>
 #include <unordered_map>
 #include <regex>
-#include "token.hpp"
+#include "line.hpp"
 #include "boost/algorithm/string.hpp"
 using std::cout;
 using std::deque;
@@ -26,7 +26,7 @@ namespace BasiK
     class Scanner
     {
     private:
-        deque<Token> *tokens;
+        deque<Line> *lines;
 
         deque<string> toRawLines(ifstream &);
         bool isWhile(string);
@@ -35,22 +35,22 @@ namespace BasiK
         bool isAssignment(string);
         bool isComment(string);
         int countTabs(string);
-        void tokenize(deque<string>);
+        void scan(deque<string>);
         void insertEOF(int);
 
     public:
         Scanner(deque<string> rawLines)
         {
-            this->tokens = new deque<Token>();
-            tokenize(rawLines);
+            this->lines = new deque<Line>();
+            scan(rawLines);
             insertEOF(rawLines.size() + 1);
         }
         Scanner(ifstream &ifile) : Scanner(toRawLines(ifile)) {}
         ~Scanner() = default;
 
-        deque<Token> *getTokens() { return this->tokens; }
-        static std::string getTokenStr(Token);
-        void printTokens();
+        deque<Line> *get_lines() { return this->lines; }
+        static std::string get_formatted_line(Line);
+        void print_lines();
         static std::string remove_spaces(std::string);
     };
 }

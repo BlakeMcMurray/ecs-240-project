@@ -70,85 +70,85 @@ int Scanner::countTabs(string text)
     return occurrences;
 }
 
-void Scanner::tokenize(deque<string> rawLines)
+void Scanner::scan(deque<string> rawLines)
 {
     deque<string> splitted;
     for (size_t i = 0; i < rawLines.size(); i++)
     {
-        Token t;
+        Line t;
         int tabInd = countTabs(rawLines[i]);
         boost::trim(rawLines[i]);
         string formatted_text = remove_spaces(rawLines[i]);
 
         if (isComment(rawLines[i]))
-            t = Token(TokenType::comment, i + 1, formatted_text);
+            t = Line(LINE_TYPE::COMMENT_LINE, i + 1, formatted_text);
         else if (isWhile(rawLines[i]))
-            t = Token(TokenType::whileLoop, i + 1, formatted_text, tabInd);
+            t = Line(LINE_TYPE::WHILE_LINE, i + 1, formatted_text, tabInd);
         else if (isFor(rawLines[i]))
-            t = Token(TokenType::forLoop, i + 1, formatted_text, tabInd);
+            t = Line(LINE_TYPE::FOR_LINE, i + 1, formatted_text, tabInd);
         else if (isIf(rawLines[i]))
-            t = Token(TokenType::ifStatement, i + 1, formatted_text, tabInd);
+            t = Line(LINE_TYPE::IF_LINE, i + 1, formatted_text, tabInd);
         else if (isAssignment(rawLines[i]))
-            t = Token(TokenType::assignment, i + 1, formatted_text, tabInd);
+            t = Line(LINE_TYPE::ASSIGNMENT_LINE, i + 1, formatted_text, tabInd);
         else
         {
-            t = Token(TokenType::error, i + 1, formatted_text, tabInd);
+            t = Line(LINE_TYPE::ERROR_LINE, i + 1, formatted_text, tabInd);
             std::cerr << "Error line {" << i + 1 << "} in statement: \"" << rawLines[i] << "\"" << endl;
             exit(1);
         }
-        this->tokens->push_back(t);
+        this->lines->push_back(t);
     }
 }
 
 void Scanner::insertEOF(int lineNum)
 {
-    Token eof = Token(TokenType::eof, lineNum);
-    tokens->push_back(eof);
+    Line eof = Line(LINE_TYPE::EOF_LINE, lineNum);
+    lines->push_back(eof);
 }
 
-std::string Scanner::getTokenStr(Token token)
+std::string Scanner::get_formatted_line(Line line)
 {
-    std::string formattedToken;
-    switch (token.tType)
+    std::string formattedLine;
+    switch (line.L_Type)
     {
-    case TokenType::whileLoop:
-        formattedToken = "whileLoop";
+    case LINE_TYPE::WHILE_LINE:
+        formattedLine = "whileLoop";
         break;
-    case TokenType::forLoop:
-        formattedToken = "forLoop\t";
+    case LINE_TYPE::FOR_LINE:
+        formattedLine = "forLoop\t";
         break;
-    case TokenType::ifStatement:
-        formattedToken = "ifStatement";
+    case LINE_TYPE::IF_LINE:
+        formattedLine = "ifStatement";
         break;
-    case TokenType::assignment:
-        formattedToken = "assignment";
+    case LINE_TYPE::ASSIGNMENT_LINE:
+        formattedLine = "assignment";
         break;
-    case TokenType::comment:
-        formattedToken = "comment";
+    case LINE_TYPE::COMMENT_LINE:
+        formattedLine = "comment";
         break;
-    case TokenType::eof:
-        formattedToken = "eof\t";
+    case LINE_TYPE::EOF_LINE:
+        formattedLine = "eof\t";
         break;
     default:
-        formattedToken = "error\t";
+        formattedLine = "error\t";
     }
 
-    formattedToken += "\t\t|";
-    formattedToken += token.lineNum;
-    formattedToken += "\t\t|";
-    formattedToken += token.tabInd;
-    formattedToken += "\t\t|";
-    formattedToken += token.text;
-    formattedToken += "\n";
-    return formattedToken;
+    formattedLine += "\t\t|";
+    formattedLine += std::to_string(line.lineNum);
+    formattedLine += "\t\t|";
+    formattedLine += std::to_string(line.tabInd);
+    formattedLine += "\t\t|";
+    formattedLine += line.text;
+    formattedLine += "\n";
+    return formattedLine;
 }
 
-void Scanner::printTokens()
+void Scanner::print_lines()
 {
-    cout << "TokenType\t\t|LineNum\t|TabInd\t\t|Text" << endl;
+    cout << "LINE_TYPE\t\t|LineNum\t|TabInd\t\t|Text" << endl;
     cout << "-------------------------------------------------------------------------\n";
-    for (size_t i = 0; i < this->tokens->size(); i++)
-        cout << getTokenStr(this->tokens->at(i));
+    for (size_t i = 0; i < this->lines->size(); i++)
+        cout << get_formatted_line(this->lines->at(i));
 }
 
 std::string Scanner::remove_spaces(std::string str)

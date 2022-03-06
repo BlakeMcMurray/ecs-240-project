@@ -3,66 +3,79 @@
 #include "complexCommand.hpp"
 #include "assignment.hpp"
 
-std::unique_ptr<std::deque<BasiK::Token>> BasiK::Program::evaluate_tokens(std::deque<Token> tokens, int active_tab_index)
+std::unique_ptr<std::deque<BasiK::Line>> BasiK::Program::evaluate_lines(std::deque<Line> &lines, int active_tab_index)
 {
-    if (tokens.front().tType == BasiK::TokenType::eof)
+    if (lines.front().L_Type == BasiK::LINE_TYPE::EOF_LINE)
         return nullptr;
 
-    auto crnt_tokens = std::unique_ptr<std::deque<BasiK::Token>>(new std::deque<BasiK::Token>());
-    std::unique_ptr<std::deque<BasiK::Token>> nested_tokens = nullptr;
-    bool neverTrue = true;
-    while (!tokens.empty())
+    bool neverTrue;
+    BasiK::Line t;
+    auto crnt_lines = std::unique_ptr<std::deque<BasiK::Line>>(new std::deque<BasiK::Line>());
+    std::unique_ptr<std::deque<BasiK::Line>> nested_lines = nullptr;
+    while (!lines.empty())
     {
-        if (tokens.front().tabInd < active_tab_index)
-            return crnt_tokens;
+        neverTrue = true;
+        if (lines.front().tabInd < active_tab_index)
+            return crnt_lines;
 
-        BasiK::Token t = tokens.front();
-        tokens.pop_front();
-        crnt_tokens->push_back(t);
+        t = lines.front();
+        lines.pop_front();
+        crnt_lines->push_back(t);
 
-        if (t.tabInd != active_tab_index && crnt_tokens->empty())
+        if (t.tabInd != active_tab_index && crnt_lines->empty())
             tab_index_error(t, active_tab_index);
 
-        switch (t.tType)
+        switch (t.L_Type)
         {
-        case TokenType::whileLoop:
+        case LINE_TYPE::WHILE_LINE:
         {
             BasiK::While whileCmd(t.text, this->scope_vars);
             if (whileCmd.exp_is_true())
             {
                 neverTrue = false;
-                nested_tokens = evaluate_tokens(tokens, active_tab_index + 1);
-                whileCmd.attach_nested_tokens(nested_tokens);
+                nested_lines = evaluate_lines(lines, active_tab_index + 1);
+                whileCmd.attach_nested_lines(nested_lines);
                 while (whileCmd.exp_is_true())
                 {
-                    auto copy_nested_tokens = whileCmd.copy_nested_tokens();
-                    evaluate_tokens(copy_nested_tokens, active_tab_index + 1);
+                    auto copy_nested_lines = whileCmd.copy_nested_lines();
+                    evaluate_lines(copy_nested_lines, active_tab_index + 1);
                 }
             }
             if (neverTrue)
-                skip_nested(tokens, active_tab_index);
+                skip_nested_lines(lines, active_tab_index);
             break;
         }
-        case TokenType::forLoop:
+        case LINE_TYPE::FOR_LINE:
         {
+            BasiK::For forCmd(t.text, this->scope_vars);
+            if (forCmd.exp_is_true())
+            {
+                neverTrue = false;
+                nested_lines = evaluate_lines(lines, active_tab_index + 1);
+                forCmd.attach_nested_lines(nested_lines);
+                while (forCmd.exp_is_true())
+                {
+                    auto copy_nested_lines = forCmd.copy_nested_lines();
+                    evaluate_lines(copy_nested_lines, active_tab_index + 1);
+                }
+            }
+            if (neverTrue)
+                skip_nested_lines(lines, active_tab_index);
             break;
         }
-        case TokenType::ifStatement:
+        case LINE_TYPE::IF_LINE:
         {
             BasiK::If ifCmd(t.text, this->scope_vars);
             if (ifCmd.exp_is_true())
             {
                 neverTrue = false;
-                evaluate_tokens(tokens, active_tab_index + 1);
-                // ifCmd.attach_nested_tokens(nested_tokens);
-                // auto copy_nested_tokens = ifCmd.copy_nested_tokens();
-                // parse_nested(copy_nested_tokens, active_tab_index + 1);
+                evaluate_lines(lines, active_tab_index + 1);
             }
             if (neverTrue)
-                skip_nested(tokens, active_tab_index);
+                skip_nested_lines(lines, active_tab_index);
             break;
         }
-        case TokenType::assignment:
+        case LINE_TYPE::ASSIGNMENT_LINE:
         {
             switch (Expression::parse_expression_type(Assignment::parse_exp(t.text)))
             {
@@ -77,19 +90,19 @@ std::unique_ptr<std::deque<BasiK::Token>> BasiK::Program::evaluate_tokens(std::d
         }
         }
     }
-    return crnt_tokens;
+    return crnt_lines;
 }
 
-void BasiK::Program::skip_nested(std::deque<Token> &tokens, int crnt_tab_index)
+void BasiK::Program::skip_nested_lines(std::deque<Line> &lines, int crnt_tab_index)
 {
-    while (tokens.front().tabInd > crnt_tab_index)
+    while (lines.front().tabInd > crnt_tab_index)
     {
-        tokens.pop_front();
+        lines.pop_front();
     }
 }
 
 // Error handling
-void BasiK::Program::tab_index_error(BasiK::Token t, int last_tab_index)
+void BasiK::Program::tab_index_error(BasiK::Line t, int last_tab_index)
 {
     std::cerr << "Error line {" << t.lineNum << "} in statement: \"" << t.text << "\"" << endl;
     std::cerr << "The command following a Complex Command must have exactly one more tab then the Complex Command preceding it."

@@ -63,8 +63,8 @@ namespace BasiK
     {
     private:
         std::string var_name;
-        int crnt_index;
-        int stop_index;
+        int crnt_count;
+        int stop_count;
         std::string parse_var_name(std::string);
         int parse_start(std::string);
         int parse_stop(std::string);
@@ -76,8 +76,8 @@ namespace BasiK
                      std::map<std::string, std::string> parent_parent_vars = {})
             : Command(nested_commands, parent_scope_vars, parent_parent_vars),
               var_name(parse_var_name(command_text)),
-              crnt_index(parse_start(command_text)),
-              stop_index(parse_stop(command_text)) {}
+              crnt_count(parse_start(command_text)),
+              stop_count(parse_stop(command_text)) {}
         ~For() = default;
     };
 } // namespace BasiK

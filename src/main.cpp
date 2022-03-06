@@ -9,10 +9,9 @@ int main()
 {
     ifstream inFile(inFile2);
     BasiK::Scanner scnr(inFile);
-    deque<BasiK::Token> tokens = *scnr.getTokens();
-    scnr.printTokens();
-
-    BasiK::Program prgm(tokens);
+    deque<BasiK::Line> lines = *scnr.get_lines();
+    scnr.print_lines();
+    BasiK::Program prgm(lines);
 
     return 0;
 }

@@ -5,7 +5,7 @@
 #include <string>
 #include <deque>
 #include <vector>
-#include "token.hpp"
+#include "line.hpp"
 #include "command.hpp"
 #include "expression.hpp"
 
@@ -14,27 +14,21 @@ namespace BasiK
     class ComplexCommand : public Command
     {
     protected:
-        // std::unique_ptr<std::deque<BasiK::Command>> nested_commands;
-        std::unique_ptr<std::deque<BasiK::Token>> nested_tokens;
+        std::unique_ptr<std::deque<BasiK::Line>> nested_lines;
 
     public:
-        // explicit ComplexCommand(std::unique_ptr<std::deque<BasiK::Command>> &nested_commands,
-        //                         std::map<std::string, std::string> &parent_scope_vars)
-        //     : Command(parent_scope_vars)
-        // {
-        //     this->nested_commands = std::move(nested_commands);
-        // }
         explicit ComplexCommand(std::map<std::string, std::string> &parent_scope_vars)
             : Command(parent_scope_vars)
         {
-            this->nested_tokens = nullptr;
+            this->nested_lines = nullptr;
         }
         ~ComplexCommand() = default;
-        void attach_nested_tokens(std::unique_ptr<std::deque<BasiK::Token>> &nested_tokens)
+        void attach_nested_lines(std::unique_ptr<std::deque<BasiK::Line>> &nested_lines)
         {
-            this->nested_tokens = std::move(nested_tokens);
+            this->nested_lines = std::move(nested_lines);
         }
-        std::deque<BasiK::Token> copy_nested_tokens();
+        std::deque<BasiK::Line> copy_nested_lines();
+        virtual bool exp_is_true() = 0;
     };
 
     class While : public ComplexCommand
@@ -52,27 +46,12 @@ namespace BasiK
         bool exp_is_true();
     };
 
-    class If : public ComplexCommand
-    {
-    private:
-        std::string exp_raw;
-        std::string parse_exp(std::string);
-
-    public:
-        explicit If(std::string command_text,
-                    std::map<std::string, std::string> &parent_scope_vars)
-            : ComplexCommand(parent_scope_vars),
-              exp_raw(parse_exp(command_text)) {}
-        ~If() = default;
-        bool exp_is_true();
-    };
-
     class For : public ComplexCommand
     {
     private:
         std::string var_name;
-        int crnt_index;
-        int stop_index;
+        int crnt_count;
+        int stop_count;
         std::string parse_var_name(std::string);
         int parse_start(std::string);
         int parse_stop(std::string);
@@ -82,9 +61,14 @@ namespace BasiK
                      std::map<std::string, std::string> &parent_scope_vars)
             : ComplexCommand(parent_scope_vars),
               var_name(parse_var_name(command_text)),
-              crnt_index(parse_start(command_text)),
-              stop_index(parse_stop(command_text)) {}
+              crnt_count(parse_start(command_text)),
+              stop_count(parse_stop(command_text))
+        {
+            this->scope_vars->insert_or_assign(this->var_name, std::to_string(this->crnt_count));
+        }
         ~For() = default;
+        int increment();
+        bool exp_is_true();
     };
 }
 

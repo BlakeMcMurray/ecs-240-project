@@ -8,7 +8,10 @@ std::string BasiK::Assignment::parse_exp(std::string command_text)
 
 std::string BasiK::Assignment::parse_var_name(std::string command_text)
 {
-    return command_text.substr(command_text.find_first_of('t') + 1, command_text.find_first_of('='));
+    boost::regex re{"(?<=let).*(?==)"};
+    boost::smatch match;
+    boost::regex_search(command_text, match, re);
+    return match.str();
 }
 
 void BasiK::AAssignment::execute()
