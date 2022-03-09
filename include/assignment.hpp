@@ -17,7 +17,7 @@ namespace BasiK
 
     public:
         explicit Assignment(std::string command_text,
-                            std::map<std::string, std::string> &parent_scope_vars)
+                            std::shared_ptr<std::map<std::string, std::string>> parent_scope_vars)
             : Command(parent_scope_vars),
               var_name(parse_var_name(command_text)),
               exp_raw(parse_exp(command_text)) {}
@@ -32,7 +32,7 @@ namespace BasiK
     {
     public:
         explicit AAssignment(std::string command_text,
-                             std::map<std::string, std::string> &parent_scope_vars)
+                             std::shared_ptr<std::map<std::string, std::string>> parent_scope_vars)
             : Assignment(command_text, parent_scope_vars)
         {
             execute();
@@ -45,7 +45,7 @@ namespace BasiK
     {
     public:
         explicit BAssignment(std::string command_text,
-                             std::map<std::string, std::string> &parent_scope_vars)
+                             std::shared_ptr<std::map<std::string, std::string>> parent_scope_vars)
             : Assignment(command_text, parent_scope_vars)
         {
             execute();

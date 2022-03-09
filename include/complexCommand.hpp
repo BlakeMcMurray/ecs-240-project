@@ -17,7 +17,7 @@ namespace BasiK
         std::unique_ptr<std::deque<BasiK::Line>> nested_lines;
 
     public:
-        explicit ComplexCommand(std::map<std::string, std::string> &parent_scope_vars)
+        explicit ComplexCommand(std::shared_ptr<std::map<std::string, std::string>> parent_scope_vars)
             : Command(parent_scope_vars)
         {
             this->nested_lines = nullptr;
@@ -39,7 +39,7 @@ namespace BasiK
 
     public:
         explicit While(std::string command_text,
-                       std::map<std::string, std::string> &parent_scope_vars)
+                       std::shared_ptr<std::map<std::string, std::string>> parent_scope_vars)
             : ComplexCommand(parent_scope_vars),
               exp_raw(parse_exp(command_text)) {}
         ~While() = default;
@@ -58,7 +58,7 @@ namespace BasiK
 
     public:
         explicit For(std::string command_text,
-                     std::map<std::string, std::string> &parent_scope_vars)
+                     std::shared_ptr<std::map<std::string, std::string>> parent_scope_vars)
             : ComplexCommand(parent_scope_vars),
               var_name(parse_var_name(command_text)),
               crnt_count(parse_start(command_text)),

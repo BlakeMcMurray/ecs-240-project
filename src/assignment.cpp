@@ -23,9 +23,11 @@ std::string BasiK::Assignment::parse_var_name(std::string command_text)
 
 void BasiK::AAssignment::execute()
 {
-    this->scope_vars->insert(std::pair<std::string, std::string>(
-        this->var_name,
-        std::to_string(BasiK::AExp::evaluate_arithmetic_exp(this->exp_raw, this->scope_vars))));
+    // this->scope_vars->insert(std::pair<std::string, std::string>(
+    //     this->var_name,
+    //     std::to_string(BasiK::AExp::evaluate_arithmetic_exp(this->exp_raw, this->scope_vars))));
+    this->scope_vars->insert_or_assign(this->var_name,
+                                       std::to_string(BasiK::AExp::evaluate_arithmetic_exp(this->exp_raw, *(this->scope_vars))));
 }
 
 /**************************
@@ -34,7 +36,9 @@ void BasiK::AAssignment::execute()
 
 void BasiK::BAssignment::execute()
 {
-    this->scope_vars->insert(std::pair<std::string, std::string>(
-        this->var_name,
-        BasiK::BExp::evaluate_bool_exp(this->exp_raw, this->scope_vars) ? "TRUE" : "FALSE"));
+    // this->scope_vars->insert(std::pair<std::string, std::string>(
+    //     this->var_name,
+    //     BasiK::BExp::evaluate_bool_exp(this->exp_raw, this->scope_vars) ? "TRUE" : "FALSE"));
+    this->scope_vars->insert_or_assign(this->var_name,
+                                       BasiK::BExp::evaluate_bool_exp(this->exp_raw, *this->scope_vars) ? "TRUE" : "FALSE");
 }

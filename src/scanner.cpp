@@ -28,7 +28,7 @@ deque<string> Scanner::toRawLines(ifstream &ifile)
 
 bool Scanner::isWhile(string command)
 {
-    regex re(R"(^(while)\s+([a-zA-Z_]\w*){1}\s+((do){1}\s*)$)");
+    regex re(R"(^(while)\s*(\S*\s*)+\s*((do){1}\s*)$)");
     return regex_search(command, re);
 }
 
@@ -40,13 +40,19 @@ bool Scanner::isFor(string command)
 
 bool Scanner::isIf(string command)
 {
-    regex re(R"(^(if)\s+([a-zA-Z_]\w*){1}\s+((do){1}\s*)$)");
+    regex re(R"(^(if)\s*(\S*\s*)+\s*((do){1}\s*)$)");
     return regex_search(command, re);
 }
 
 bool Scanner::isAssignment(string command)
 {
-    regex re(R"(^(let)\s+([a-zA-Z_]\w*){1}(\s)+={1}\s+([a-zA-Z_]\w*\s*$|-?(\d+\s*)$|(\S)+\s*)+)");
+    regex re(R"(^(let)\s+([a-zA-Z_]\w*){1}(\s)*={1}\s*([a-zA-Z_]\w*\s*$|-?(\d+\s*)$|(\S)+\s*)+)");
+    return regex_search(command, re);
+}
+
+bool Scanner::isPrint(string command)
+{
+    regex re(R"(^(print)\s+([a-zA-Z]\w*){1}$)");
     return regex_search(command, re);
 }
 
@@ -78,7 +84,8 @@ void Scanner::scan(deque<string> rawLines)
         Line t;
         int tabInd = countTabs(rawLines[i]);
         boost::trim(rawLines[i]);
-        string formatted_text = remove_spaces(rawLines[i]);
+        string formatted_text = rawLines[i];
+        formatted_text = remove_spaces(formatted_text);
 
         if (isComment(rawLines[i]))
             t = Line(LINE_TYPE::COMMENT, i + 1, formatted_text);
@@ -90,6 +97,8 @@ void Scanner::scan(deque<string> rawLines)
             t = Line(LINE_TYPE::IF, i + 1, formatted_text, tabInd);
         else if (isAssignment(rawLines[i]))
             t = Line(LINE_TYPE::ASSIGNMENT, i + 1, formatted_text, tabInd);
+        else if (isPrint(rawLines[i]))
+            t = Line(LINE_TYPE::PRINT, i + 1, formatted_text, tabInd);
         else
         {
             t = Line(LINE_TYPE::ERROR, i + 1, formatted_text, tabInd);

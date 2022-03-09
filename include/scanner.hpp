@@ -33,6 +33,7 @@ namespace BasiK
         bool isFor(string);
         bool isIf(string);
         bool isAssignment(string);
+        bool isPrint(string);
         bool isComment(string);
         int countTabs(string);
         void scan(deque<string>);

@@ -1,8 +1,5 @@
 let   A  = (1 * 5 + 2 + 3) / 2
-let B = A - (A * 2)
-#while TRUE do
-#    let B = 5 + 1
-#    for ind from 0 to 10 do
-#        let C = C + i
-#        if TRUE do
-#            let A = A+2+1232+2
+let i = 0
+while i <= 4 + 1 do
+    let i = i + 1
+    print i

@@ -29,7 +29,7 @@ std::unique_ptr<std::deque<BasiK::Line>> BasiK::Program::evaluate_lines(std::deq
         {
         case LINE_TYPE::WHILE:
         {
-            BasiK::While whileCmd(line.text, this->scope_vars);
+            BasiK::While whileCmd(line.text, this->global_vars);
             if (whileCmd.exp_is_true())
             {
                 neverTrue = false;
@@ -47,7 +47,7 @@ std::unique_ptr<std::deque<BasiK::Line>> BasiK::Program::evaluate_lines(std::deq
         }
         case LINE_TYPE::FOR:
         {
-            BasiK::For forCmd(line.text, this->scope_vars);
+            BasiK::For forCmd(line.text, this->global_vars);
             if (forCmd.exp_is_true())
             {
                 neverTrue = false;
@@ -67,7 +67,7 @@ std::unique_ptr<std::deque<BasiK::Line>> BasiK::Program::evaluate_lines(std::deq
         }
         case LINE_TYPE::IF:
         {
-            BasiK::If ifCmd(line.text, this->scope_vars);
+            BasiK::If ifCmd(line.text, this->global_vars);
             if (ifCmd.exp_is_true())
             {
                 neverTrue = false;
@@ -79,11 +79,15 @@ std::unique_ptr<std::deque<BasiK::Line>> BasiK::Program::evaluate_lines(std::deq
         }
         case LINE_TYPE::ASSIGNMENT:
         {
-            if (Expression::parse_expression_type(Assignment::parse_exp(line.text)) == 'A')
-                BasiK::AAssignment aAss(line.text, this->scope_vars);
+            auto vars = *(this->global_vars);
+            if (Expression::parse_expression_type(Assignment::parse_exp(line.text), vars) == 'A')
+                BasiK::AAssignment aAss(line.text, this->global_vars);
             else
-                BasiK::BAssignment bAss(line.text, this->scope_vars);
+                BasiK::BAssignment bAss(line.text, this->global_vars);
+            break;
         }
+        case LINE_TYPE::PRINT:
+            BasiK::Print(line.text, this->global_vars);
         }
     }
     return crnt_lines;

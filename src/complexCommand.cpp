@@ -24,7 +24,7 @@ std::string BasiK::While::parse_exp(std::string command_text)
 
 bool BasiK::While::exp_is_true()
 {
-    return BasiK::BExp::evaluate_bool_exp(this->exp_raw, this->scope_vars);
+    return BasiK::BExp::evaluate_bool_exp(this->exp_raw, *this->scope_vars);
 }
 
 /**************************

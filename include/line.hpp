@@ -10,6 +10,7 @@ enum LINE_TYPE
     IF,
     ASSIGNMENT,
     COMMENT,
+    PRINT,
     END_OF_FILE,
     ERROR
 };

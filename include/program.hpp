@@ -13,7 +13,7 @@ namespace BasiK
     class Program
     {
     private:
-        std::map<std::string, std::string> scope_vars;
+        std::shared_ptr<std::map<std::string, std::string>> global_vars;
         std::deque<std::string> output;
         std::unique_ptr<std::deque<BasiK::Line>> evaluate_lines(std::deque<Line> &, int);
         void skip_nested_lines(std::deque<Line> &, int);
@@ -21,6 +21,7 @@ namespace BasiK
     public:
         Program(std::deque<Line> lines)
         {
+            global_vars = std::make_shared<std::map<std::string, std::string>>();
             evaluate_lines(lines, 0);
         }
         ~Program() = default;
