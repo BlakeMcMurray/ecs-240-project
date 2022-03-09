@@ -153,6 +153,9 @@ void Scanner::print_lines()
 
 std::string Scanner::remove_spaces(std::string str)
 {
+    // To replace duplicate spaces with a single space
+    // std::string::iterator new_end = std::unique(str.begin(), str.end(), BothAreSpaces);
+    // str.erase(new_end, str.end());
     str.erase(std::remove(str.begin(), str.end(), ' '), str.end());
     return str;
 }

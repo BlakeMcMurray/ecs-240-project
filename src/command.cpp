@@ -10,5 +10,5 @@ std::string BasiK::If::parse_exp(std::string command_text)
 
 bool BasiK::If::exp_is_true()
 {
-    return BasiK::BExp::evaluate(this->exp_raw, this->scope_vars);
+    return BasiK::BExp::evaluate_bool_exp(this->exp_raw, this->scope_vars);
 }
