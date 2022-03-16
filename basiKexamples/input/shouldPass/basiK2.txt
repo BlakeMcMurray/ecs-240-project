@@ -1,0 +1,12 @@
+let A = (1 + 2 * 5) + ((3 + 3) / 2)
+print A
+let i = 5
+#this is a comment
+while i < A - 4 do
+    print i
+    let i = i + 1
+    if i > 8 do
+        for j from 0 to 3 do
+            print j
+            for k from 100 to 103 do
+                print k
