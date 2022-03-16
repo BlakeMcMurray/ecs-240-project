@@ -16,6 +16,7 @@ namespace BasiK
         std::shared_ptr<std::map<std::string, std::string>> global_vars;
         std::deque<std::string> output;
         std::unique_ptr<std::deque<BasiK::Line>> evaluate_lines(std::deque<Line> &, int);
+        std::unique_ptr<std::deque<BasiK::Line>> get_nested_lines(std::deque<Line> &, int);
         void skip_nested_lines(std::deque<Line> &, int);
 
     public:

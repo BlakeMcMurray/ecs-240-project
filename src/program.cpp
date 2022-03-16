@@ -33,7 +33,7 @@ std::unique_ptr<std::deque<BasiK::Line>> BasiK::Program::evaluate_lines(std::deq
             if (whileCmd.exp_is_true())
             {
                 neverTrue = false;
-                nested_lines = evaluate_lines(lines, active_tab_index + 1);
+                nested_lines = std::move(get_nested_lines(lines, active_tab_index));
                 whileCmd.attach_nested_lines(nested_lines);
                 while (whileCmd.exp_is_true())
                 {
@@ -51,7 +51,7 @@ std::unique_ptr<std::deque<BasiK::Line>> BasiK::Program::evaluate_lines(std::deq
             if (forCmd.exp_is_true())
             {
                 neverTrue = false;
-                nested_lines = evaluate_lines(lines, active_tab_index + 1);
+                nested_lines = std::move(get_nested_lines(lines, active_tab_index));
                 forCmd.attach_nested_lines(nested_lines);
                 forCmd.increment();
                 while (forCmd.exp_is_true())
@@ -91,6 +91,17 @@ std::unique_ptr<std::deque<BasiK::Line>> BasiK::Program::evaluate_lines(std::deq
         }
     }
     return crnt_lines;
+}
+
+std::unique_ptr<std::deque<BasiK::Line>> BasiK::Program::get_nested_lines(std::deque<Line> &lines, int crnt_tab_index)
+{
+    std::unique_ptr<std::deque<BasiK::Line>> nested_lines(new std::deque<BasiK::Line>);
+    while (lines.front().tabInd > crnt_tab_index)
+    {
+        nested_lines->push_back(lines.front());
+        lines.pop_front();
+    }
+    return nested_lines;
 }
 
 void BasiK::Program::skip_nested_lines(std::deque<Line> &lines, int crnt_tab_index)

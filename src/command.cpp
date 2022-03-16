@@ -26,7 +26,7 @@ void BasiK::Print::execute()
 {
     try
     {
-        std::cout << this->scope_vars->at(this->var_name) << std::endl;
+        std::cout << this->var_name << " is " << this->scope_vars->at(this->var_name) << std::endl;
     }
     catch (const std::exception &e)
     {

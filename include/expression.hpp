@@ -36,22 +36,21 @@ namespace BasiK
     {
     public:
         // Return a string representing the types of expression. Either "AExp" or "BExp".
-        static char parse_expression_type(std::string, std::map<std::string, std::string>);
+        static char parse_expression_type(const std::string&, std::map<std::string, std::string>);
     };
 
     // Arithmetic Expression
     class AExp : public Expression
     {
     private:
-        static int evaluate_term(std::deque<BasiK::ExpressionToken> &, std::map<std::string, std::string>);
+        static int evaluate_term(std::deque<BasiK::ExpressionToken> &, const std::map<std::string, std::string>&);
         static int evaluate_factor(std::deque<BasiK::ExpressionToken> &, std::map<std::string, std::string>);
-        static std::deque<ExpressionToken> tokenize_arithmetic_exp(std::string);
+        static std::deque<ExpressionToken> tokenize_arithmetic_exp(const std::string&);
 
     public:
         static const std::unordered_set<std::string> operators;
-        // Verify there are no logical or binary comparitors in an arthmetic expressions
-        static bool verify_correct_exp(std::string, std::map<std::string, std::string>);
-        static int evaluate_arithmetic_exp(std::string, std::map<std::string, std::string>);
+        static bool verify_correct_exp(const std::string&, std::map<std::string, std::string>);
+        static int evaluate_arithmetic_exp(const std::string&, const std::map<std::string, std::string>&);
     };
 
     // Boolean Expression
@@ -59,26 +58,25 @@ namespace BasiK
     {
     private:
         static bool evaluate_boolean(std::deque<BasiK::ExpressionToken> &, std::map<std::string, std::string>);
-        static bool evaluate_arithmetic_comparison(std::string, std::string, std::string, std::map<std::string, std::string>);
+        static bool evaluate_arithmetic_comparison(const std::string&, const std::string&, const std::string&, const std::map<std::string, std::string>&);
         static std::deque<ExpressionToken> tokenize_boolean_exp(std::string);
 
     public:
         static const std::unordered_set<std::string> logicalComparators;
         static const std::unordered_set<std::string> binaryComparators;
-        // Verify only a single binary comparator between arithmetic expressions and only a single logical comparator between boolean expressions
-        static bool verify_correct_exp(std::string, std::map<std::string, std::string>);
-        static bool evaluate_bool_exp(std::string, std::map<std::string, std::string>);
+        static bool verify_correct_exp(const std::string&, std::map<std::string, std::string>);
+        static bool evaluate_bool_exp(const std::string&, const std::map<std::string, std::string>&);
     };
 
     // Expression Error
     class ExpressionError
     {
     public:
-        static void wrong_expression_type(std::string, std::string, std::string);
-        static void parenthesis_error(std::string);
-        static void exp_token_error(ExpressionToken);
-        static void bin_comparison_error(std::string, std::string, std::string);
-        static void var_doesnt_exist_error(std::string);
+        static void wrong_expression_type(const std::string&, const std::string&, const std::string&);
+        static void parenthesis_error(const std::string&);
+        static void exp_token_error(const ExpressionToken&);
+        static void bin_comparison_error(const std::string&, const std::string&, const std::string&);
+        static void var_doesnt_exist_error(const std::string&);
     };
 }
 

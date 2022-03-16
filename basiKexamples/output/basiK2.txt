@@ -1,0 +1,35 @@
+LINE_TYPE		|LineNum	|TabInd		|Text
+-------------------------------------------------------------------------
+assignment		|1		    |0		    |letA=(1+2*5)+((3+3)/2)
+error			|2		    |0		    |printA
+assignment		|3		    |0		    |leti=5
+comment			|4		    |0		    |#thisisacomment
+whileLoop		|5		    |0		    |whilei<A-4do
+error			|6		    |1		    |printi
+assignment		|7		    |1		    |leti=i+1
+ifStatement		|8		    |1		    |ifi>8do
+forLoop			|9		    |2		    |forjfrom0to3do
+error			|10		    |3		    |printj
+forLoop			|11		    |3		    |forkfrom100to103do
+error			|12		    |4		    |printk
+eof			    |13		    |0		    |
+A is 14
+i is 5
+i is 6
+i is 7
+i is 8
+j is 1
+k is 101
+k is 102
+j is 2
+k is 101
+k is 102
+i is 9
+j is 1
+k is 101
+k is 102
+j is 2
+k is 101
+k is 102
+
+
